@@ -7,6 +7,7 @@ set(GO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libtui)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 
 include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
+include_directories(${CMAKE_SOURCE_DIR}/sqlite_modern_cpp/hdr)
 
 file(GLOB SRC_FILES ${SRC_DIR}/*.cpp)
 file(GLOB GO_FILES ${GO_SOURCE_DIR}/*.go)

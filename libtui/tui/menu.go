@@ -10,11 +10,13 @@ func MenuChoice() int {
 		"Borrowing a book",
 		"Search by book title or author",
 		"Display a list of borrowed books and the members who have them",
+		"Exit",
 	}
 
 	selectedOption, _ := pterm.DefaultInteractiveSelect.
 	WithOptions(options).
 	WithFilter(false).
+	WithMaxHeight(10).
 	Show("Please select an option")
 
 	selectedIndex := -1

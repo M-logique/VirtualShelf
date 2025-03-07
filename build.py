@@ -1,8 +1,8 @@
-import subprocess
-import os
 import argparse
-import shutil
 import logging
+import os
+import shutil
+import subprocess
 import sys
 from typing import Optional
 
@@ -52,9 +52,10 @@ def move_binary(destination: str):
                 logger.info(f"Moved binary {file} to {destination}")
 
 
-
 def find_executable(output_dir: str) -> Optional[str]:
-    binary_name = "VirtualShelf.exe" if sys.platform.startswith("win") else "VirtualShelf"
+    binary_name = (
+        "VirtualShelf.exe" if sys.platform.startswith("win") else "VirtualShelf"
+    )
     binary_path = os.path.join(output_dir, binary_name)
     if os.path.isfile(binary_path):
         return binary_path
@@ -64,8 +65,20 @@ def find_executable(output_dir: str) -> Optional[str]:
                 return os.path.join(root, file)
     return None
 
+
 if __name__ == "__main__":
     logger = setup_logger()
+
+    if not os.path.exists("./sqlite_modern_cpp/hdr"):
+        logger.info("Cloning sqlite_modern_cpp")
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "https://github.com/SqliteModernCpp/sqlite_modern_cpp.git",
+            ],
+            check=True,
+        )
 
     parser = argparse.ArgumentParser(description="C++ Project Build Script")
     parser.add_argument(
@@ -92,14 +105,10 @@ if __name__ == "__main__":
         "--run",
         "-r",
         help="Runs the binary file after the compile",
-        action="store_true"
+        action="store_true",
     )
     parser.add_argument(
-        "--remove",
-        "-rm",
-        help="Removes the specified path",
-        required=False,
-        type=str
+        "--remove", "-rm", help="Removes the specified path", required=False, type=str
     )
 
     args = parser.parse_args()
@@ -112,12 +121,9 @@ if __name__ == "__main__":
                 logger.info("Removing %s", p)
                 os.remove(p)
 
-    try:
-        build(args.build_type)
-        if args.output_dir:
-            move_binary(args.output_dir)
-    except subprocess.CalledProcessError as e:
-        logger.error(f"Build failed with error: {e}")
+    build(args.build_type)
+    if args.output_dir:
+        move_binary(args.output_dir)
 
     if args.run:
         binary_path = find_executable(args.output_dir)
