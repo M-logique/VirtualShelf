@@ -18,7 +18,7 @@ func fade(text string, startColor pterm.RGB, endColor pterm.RGB) {
 		currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
 		txt += currentColor.Sprint(splittedText[i])
 	}
-	pterm.Println(txt)
+	pterm.Print(txt)
 }
 
 func TypeText(text string, sleepDuration time.Duration, startColor pterm.RGB, endColor pterm.RGB) {

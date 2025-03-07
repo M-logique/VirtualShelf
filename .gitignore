@@ -78,3 +78,5 @@ bin/
 
 # .vscode
 .vscode/
+
+sqlite_modern_cpp/

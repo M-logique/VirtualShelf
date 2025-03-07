@@ -7,5 +7,7 @@
 void Clear();
 void setupDatabase(sqlite::database& db);
 std::string getString(const std::string& text);
+int getNum(const std::string& text);
+void typeText(const std::string& text);
 
 #endif // UTILS_H

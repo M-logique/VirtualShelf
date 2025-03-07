@@ -2,14 +2,15 @@
 #include <sqlite_modern_cpp.h>
 #include <Utils.h>
 #include <libtui.h>
-
+#include <sstream>
 
 using namespace std;
 using namespace sqlite;
 
 
 
-void Clear() {
+void Clear() 
+{
     #ifdef _WIN32
         system("cls");
     #else
@@ -47,15 +48,39 @@ string getString(const string& text)
     while (true) {
         string input;
 
-        TypeText(const_cast<char*>(text.c_str()));
+        typeText(text);
 
         getline(cin, input);
 
         if (input.empty()) {
-            TypeText(const_cast<char*>("Invalid input. Please enter a non-empty string.\n"));
+            typeText("Invalid input. Please enter a non-empty string.\n");
             continue;
         }
 
         return input;
     }
+}
+
+int getNum(const string& text) 
+{
+    while (true) {
+        string input;
+        int inputMsg;
+
+        typeText(text);
+        getline(cin, input);
+
+        stringstream ss(input);
+        if (!(ss >> inputMsg)) {
+            typeText("Invalid input. Please enter a number.\n");
+            continue;
+        }
+
+        return inputMsg;
+    }
+}
+
+void typeText(const string& text) 
+{
+    TypeText(const_cast<char*>(text.c_str()));
 }

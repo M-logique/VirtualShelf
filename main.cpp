@@ -3,6 +3,7 @@
 #include <Utils.h>
 #include <sqlite_modern_cpp.h>
 #include <string>
+#include <Options.h>
 
 using namespace std;
 using namespace sqlite;
@@ -14,28 +15,26 @@ int main()
 
     cout << "Setting up the database" << endl;
     setupDatabase(db);
-    Clear();
-    PrintLogo();
-    int choice = GetMenuChoice();
 
+    while (true) {
+        Clear();
+        PrintLogo();
+        int choice = GetMenuChoice();
 
-    string n;
-    switch (choice)
-    {
-    case 0:
-        n = getString("Enter the name of the book: ");
-        cout << 
-            "Name of the book: "
-            << n 
-            << endl;
-        break;
-    case 6:
-        exit(0);
-        break;
-    
-    default:
-        break;
+        cout << endl;
+        switch (choice)
+        {
+        case 0:
+            addBook(db);
+            break;
+        case 6:
+            exit(0);
+            break;
+        
+        default:
+            break;
+        }
+
     }
-
     return 0;
 }
