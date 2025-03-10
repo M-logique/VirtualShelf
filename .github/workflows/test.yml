@@ -43,12 +43,14 @@ jobs:
           tag: v1.14.0
         
       - uses: ilammy/msvc-dev-cmd@v1
-      - run: choco install sqlite
       - uses: Bacondish2023/setup-googletest@v1
         if: ${{ matrix.os == 'windows-latest'}}
         with:
           tag: v1.14.0
-      
+        
+      - name: Install sqlite for windows
+        run: choco install sqlite
+        if: ${{ matrix.os == 'windows-latest'}}      
 
       - name: Verify Go installation
         run: go version
