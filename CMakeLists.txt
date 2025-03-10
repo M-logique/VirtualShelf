@@ -38,10 +38,9 @@ set_target_properties(libtui PROPERTIES IMPORTED_LOCATION ${LIBTUI_OUTPUT})
 add_custom_target(BuildLibtui ALL DEPENDS ${LIBTUI_OUTPUT})
 add_dependencies(VirtualShelf BuildLibtui)
 
+set(CMAKE_TOOLCHAIN_FILE "$ENV{CMAKE_TOOLCHAIN_FILE}" CACHE STRING "")
 
 if(WIN32)
-    set(CMAKE_TOOLCHAIN_FILE "D:/a/VirtualShelf/VirtualShelf/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        CACHE STRING "Vcpkg toolchain file")
     find_package(unofficial-sqlite3 CONFIG REQUIRED)
     target_link_libraries(VirtualShelf PRIVATE unofficial::sqlite3::sqlite3)
 elseif(UNIX)
