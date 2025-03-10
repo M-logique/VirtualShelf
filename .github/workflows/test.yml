@@ -43,6 +43,8 @@ jobs:
       - name: Verify CMake installation
         run: cmake --version
 
+      - run: python3 -m pip install gitpython
+      
       - name: Build project
         run: 
           python3 -m pip install gitpython
