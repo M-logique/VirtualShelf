@@ -8,7 +8,7 @@ on:
       - '.vscode/'
   push:
     branches:
-        - main
+        - master
         - dev
     paths-ignore:
       - '**.md'
