@@ -37,6 +37,10 @@ jobs:
         with:
           version: '3.25.1'
 
+      - uses: Bacondish2023/setup-googletest@v1
+        with:
+          tag: v1.14.0
+
       - name: Verify Go installation
         run: go version
 
