@@ -40,10 +40,16 @@ add_dependencies(VirtualShelf BuildLibtui)
 
 set(CMAKE_TOOLCHAIN_FILE "$ENV{CMAKE_TOOLCHAIN_FILE}" CACHE STRING "")
 
-
-find_package(SQLite3 REQUIRED)
+if(WIN32)
+    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+    target_link_libraries(VirtualShelf PRIVATE unofficial::sqlite3::sqlite3)
+elseif(UNIX)
+    find_package(SQLite3 REQUIRED)
+    target_link_libraries(VirtualShelf libtui SQLite::SQLite3)
+endif()
+    
 target_link_directories(VirtualShelf PRIVATE ${CMAKE_BINARY_DIR})
-target_link_libraries(VirtualShelf libtui SQLite::SQLite3)
+
 
 # GTest
 enable_testing()
