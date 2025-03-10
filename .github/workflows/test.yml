@@ -49,8 +49,13 @@ jobs:
           tag: v1.14.0
         
       - name: Install sqlite for windows
-        run: choco install sqlite
-        if: ${{ matrix.os == 'windows-latest'}}      
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          .\vcpkg install sqlite3:x64-windows
+          echo "CMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake" >> $GITHUB_ENV
+        if: ${{ matrix.os == 'windows-latest'}}
 
       - name: Verify Go installation
         run: go version

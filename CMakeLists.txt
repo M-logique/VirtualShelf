@@ -38,6 +38,9 @@ set_target_properties(libtui PROPERTIES IMPORTED_LOCATION ${LIBTUI_OUTPUT})
 add_custom_target(BuildLibtui ALL DEPENDS ${LIBTUI_OUTPUT})
 add_dependencies(VirtualShelf BuildLibtui)
 
+set(CMAKE_TOOLCHAIN_FILE "$ENV{CMAKE_TOOLCHAIN_FILE}" CACHE STRING "")
+
+
 find_package(SQLite3 REQUIRED)
 target_link_directories(VirtualShelf PRIVATE ${CMAKE_BINARY_DIR})
 target_link_libraries(VirtualShelf libtui SQLite::SQLite3)
