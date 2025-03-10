@@ -47,5 +47,4 @@ jobs:
 
       - name: Build project
         run: 
-          python3 -m pip install gitpython
           python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t Release --test
