@@ -14,8 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         arch: [amd64, arm64]  # Add support for multiple architectures
 
     steps:
@@ -39,8 +38,16 @@ jobs:
           version: '3.25.1'
 
       - uses: Bacondish2023/setup-googletest@v1
+        if: ${{matrix.os != 'windows-latest'}}
         with:
           tag: v1.14.0
+        
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: Bacondish2023/setup-googletest@v1
+        if: ${{ matrix.os == 'windows-latest'}}
+        with:
+          tag: v1.14.0
+      
 
       - name: Verify Go installation
         run: go version
