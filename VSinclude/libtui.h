@@ -4,10 +4,11 @@
 
 extern "C" 
 {
-    extern void PrintLogo();
-    extern int GetMenuChoice();
-    extern void TypeText(char* text);
-    extern void PressEnter();
+    extern void GoPrintLogo();
+    extern int  GoGetMenuChoice();
+    extern void GoTypeText(char* text);
+    extern void GoPressEnter();
+    extern void GoBetterPrint(char* text);
 }
 
 #endif // LIBTUI_H

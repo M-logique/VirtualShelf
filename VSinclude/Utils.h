@@ -10,4 +10,17 @@ std::string getString(const std::string& text);
 int getNum(const std::string& text);
 void typeText(const std::string& text);
 
+class Printer {
+public:
+    Printer& operator<<(const std::string& data);
+    Printer& operator<<(int data);
+    Printer& operator<<(std::ostream& (*func)(std::ostream&));
+};
+
+extern Printer prnt;
+
+void betterPrint(const std::string& text);
+
+extern Printer printer;
+
 #endif // UTILS_H

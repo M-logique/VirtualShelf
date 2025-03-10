@@ -1,0 +1,60 @@
+name: Build
+
+on: 
+  workflow_call:
+
+jobs: 
+  build:
+    name: Build binaries
+    runs-on: ${{ matrix.os }}
+
+    permissions:
+      contents: read  # Minimal required permissions
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [amd64, arm64]  # Add support for multiple architectures
+
+    steps:
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{github.workspace}}/libtui/go.mod
+    
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install CMake
+        uses: ssrobins/install-cmake@v1
+        with:
+          version: '3.25.1'
+
+      - name: Verify Go installation
+        run: go version
+
+      - name: Verify CMake installation
+        run: cmake --version
+
+      - name: Build project
+        run: 
+          python3 .github/builder.py -o ./dist -t Release
+
+      - name: Rename binary
+        run: 
+          python3 .github/rename.py ./dist
+        env: 
+          ARCH: ${{ matrix.arch }}-${{matrix.os}}
+
+      - name: Upload Binary artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}.bin
+          path: dist/

@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 from typing import Optional
+from git import Repo
 
 BUILD_PATH = "build"
 
@@ -40,11 +41,11 @@ def build(build_type):
 
 def move_binary(destination: str):
     # Search for files named VirtualShelf or VirtualShelf.*
-    for root, dirs, files in os.walk(BUILD_PATH):
+    for root, _, files in os.walk(BUILD_PATH):
         for file in files:
             if file.startswith(
                 "VirtualShelf"
-            ):  # Matches "VirtualShelf" and "VirtualShelf.*"
+            ) and not "Tests" in file:  # Matches "VirtualShelf" and "VirtualShelf.*"
                 src = os.path.join(root, file)
                 if not os.path.exists(destination):
                     os.makedirs(destination)
@@ -71,14 +72,18 @@ if __name__ == "__main__":
 
     if not os.path.exists("./sqlite_modern_cpp/hdr"):
         logger.info("Cloning sqlite_modern_cpp")
-        subprocess.run(
-            [
-                "git",
-                "clone",
-                "https://github.com/SqliteModernCpp/sqlite_modern_cpp.git",
-            ],
-            check=True,
+        Repo.clone_from(
+            "https://github.com/SqliteModernCpp/sqlite_modern_cpp.git",
+            to_path="sqlite_modern_cpp",
         )
+        # subprocess.run(
+        #     [
+        #         "git",
+        #         "clone",
+        #         "https://github.com/SqliteModernCpp/sqlite_modern_cpp.git",
+        #     ],
+        #     check=True,
+        # )
 
     parser = argparse.ArgumentParser(description="C++ Project Build Script")
     parser.add_argument(
@@ -110,6 +115,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--remove", "-rm", help="Removes the specified path", required=False, type=str
     )
+    parser.add_argument("--test", "-tst", help="Runs tests", action="store_true")
 
     args = parser.parse_args()
 
@@ -124,6 +130,9 @@ if __name__ == "__main__":
     build(args.build_type)
     if args.output_dir:
         move_binary(args.output_dir)
+
+    if args.test:
+        subprocess.run(["ctest", "--output-on-failure"], check=True, cwd=BUILD_PATH)
 
     if args.run:
         binary_path = find_executable(args.output_dir)

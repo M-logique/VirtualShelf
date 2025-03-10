@@ -10,30 +10,30 @@ import (
 	"github.com/pterm/pterm"
 )
 
-//export PrintLogo
-func PrintLogo() {
+//export GoPrintLogo
+func GoPrintLogo() {
 	tui.PrintLogo()
 }
 
-//export GetMenuChoice
-func GetMenuChoice() int {
+//export GoGetMenuChoice
+func GoGetMenuChoice() int {
 	return tui.MenuChoice()
 }
 
-//export TypeText
-func TypeText(text *C.char) {
+//export GoTypeText
+func GoTypeText(text *C.char) {
 	goText := C.GoString(text)
 
 	tui.TypeText(
 		goText,
-		time.Millisecond * 3,
+		time.Millisecond * 5,
 		pterm.NewRGB(0, 255, 255),
 		pterm.NewRGB(80, 80, 80),
 	)
 }
 
-//export PressEnter
-func PressEnter() {
+//export GoPressEnter
+func GoPressEnter() {
 	fmt.Println()
 	tui.TypeText(
 		"Press enter to continue...", 
@@ -42,6 +42,12 @@ func PressEnter() {
 		pterm.NewRGB(80, 80, 80),
 	)
 	fmt.Scanln()
+}
+
+//export GoBetterPrint
+func GoBetterPrint(text *C.char) {
+	goText := C.GoString(text)
+	tui.BetterPrint(goText)
 }
 
 

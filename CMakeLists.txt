@@ -5,14 +5,61 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(GO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libtui)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
 
 include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
 include_directories(${CMAKE_SOURCE_DIR}/sqlite_modern_cpp/hdr)
 
 file(GLOB SRC_FILES ${SRC_DIR}/*.cpp)
 file(GLOB GO_FILES ${GO_SOURCE_DIR}/*.go)
+file(GLOB TEST_FILES ${TEST_DIR}/*.cpp)
 
 add_executable(VirtualShelf main.cpp ${SRC_FILES})
+
+if(WIN32)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+    set(LIBTUI_OUTPUT ${CMAKE_BINARY_DIR}/libtui.lib)
+    target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
+
+elseif(UNIX)
+    set(LIBTUI_OUTPUT ${CMAKE_BINARY_DIR}/libtui.a)
+endif()
+
+add_custom_command(
+    OUTPUT ${LIBTUI_OUTPUT}
+    COMMAND go build -buildmode=c-archive -o ${LIBTUI_OUTPUT} ${GO_FILES}
+    WORKING_DIRECTORY ${GO_SOURCE_DIR}
+    COMMENT "Building Go project as a static library"
+)
+
+add_library(libtui STATIC IMPORTED)
+set_target_properties(libtui PROPERTIES IMPORTED_LOCATION ${LIBTUI_OUTPUT})
+
+add_custom_target(BuildLibtui ALL DEPENDS ${LIBTUI_OUTPUT})
+add_dependencies(VirtualShelf BuildLibtui)
+
+find_package(SQLite3 REQUIRED)
+target_link_directories(VirtualShelf PRIVATE ${CMAKE_BINARY_DIR})
+target_link_libraries(VirtualShelf libtui SQLite::SQLite3)
+
+# GTest
+enable_testing()
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
+
+add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
+target_link_libraries(VirtualShelfTests GTest::GTest GTest::Main libtui SQLite::SQLite3)
+
+add_custom_target(run_tests
+    COMMAND ${CMAKE_CTEST_COMMAND}
+    DEPENDS VirtualShelfTests
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Running all tests"
+)
+
+add_test(NAME VirtualShelfTests COMMAND VirtualShelfTests)
+
 
 # if(WIN32)
 #     # Windows-specific options
@@ -44,35 +91,3 @@ add_executable(VirtualShelf main.cpp ${SRC_FILES})
 
 
 # add_dependencies(VirtualShelf BuildLibtui)
-
-if(WIN32)
-    # Windows-specific options
-    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    set(LIBTUI_OUTPUT ${CMAKE_BINARY_DIR}/libtui.lib)
-    target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
-
-elseif(UNIX)
-    # Linux-specific options
-    set(LIBTUI_OUTPUT ${CMAKE_BINARY_DIR}/libtui.a)
-endif()
-
-# کامپایل Go به عنوان یک کتابخانه
-add_custom_command(
-    OUTPUT ${LIBTUI_OUTPUT}
-    COMMAND go build -buildmode=c-archive -o ${LIBTUI_OUTPUT} ${GO_FILES}
-    WORKING_DIRECTORY ${GO_SOURCE_DIR}
-    COMMENT "Building Go project as a static library"
-)
-
-# اضافه کردن کتابخانه libtui
-add_library(libtui STATIC IMPORTED)
-set_target_properties(libtui PROPERTIES IMPORTED_LOCATION ${LIBTUI_OUTPUT})
-
-# اطمینان از ساخت libtui قبل از لینک شدن
-add_custom_target(BuildLibtui ALL DEPENDS ${LIBTUI_OUTPUT})
-add_dependencies(VirtualShelf BuildLibtui)
-
-# لینک کردن SQLite و libtui
-find_package(SQLite3 REQUIRED)
-target_link_directories(VirtualShelf PRIVATE ${CMAKE_BINARY_DIR})
-target_link_libraries(VirtualShelf libtui SQLite::SQLite3)

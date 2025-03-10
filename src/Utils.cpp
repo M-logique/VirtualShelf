@@ -39,7 +39,8 @@ void setupDatabase(database& db)
     db << 
         "CREATE TABLE IF NOT EXISTS users("
         "   _id integer primary key autoincrement not null,"
-        "   name text"
+        "   name text,"
+        "   student_id integer"
         ");";
 } 
 
@@ -82,5 +83,29 @@ int getNum(const string& text)
 
 void typeText(const string& text) 
 {
-    TypeText(const_cast<char*>(text.c_str()));
+    GoTypeText(const_cast<char*>(text.c_str()));
 }
+
+void betterPrint(const string& text) {
+    GoBetterPrint(const_cast<char*>(text.c_str()));
+}
+
+Printer& Printer::operator<<(const std::string& data) {
+    betterPrint(data);
+    return *this;
+}
+
+Printer& Printer::operator<<(int data) {
+    std::stringstream ss;
+    ss << data;
+    betterPrint(ss.str());
+    return *this;
+}
+
+
+Printer& Printer::operator<<(std::ostream& (*func)(std::ostream&)) {
+    func(std::cout); 
+    return *this;
+}
+
+Printer printer;
