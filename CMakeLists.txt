@@ -20,7 +20,8 @@ if(WIN32)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
     set(LIBTUI_OUTPUT ${CMAKE_BINARY_DIR}/libtui.lib)
     target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
-else()
+
+elseif(UNIX)
     set(LIBTUI_OUTPUT ${CMAKE_BINARY_DIR}/libtui.a)
 endif()
 
@@ -39,13 +40,20 @@ add_dependencies(VirtualShelf BuildLibtui)
 
 set(CMAKE_TOOLCHAIN_FILE "$ENV{CMAKE_TOOLCHAIN_FILE}" CACHE STRING "")
 
+if(WIN32)
+    include_directories(C:\ProgramData\chocolatey\lib\sqlite3\tools\lib)
+endif()
 find_package(SQLite3 REQUIRED)
-target_include_directories(VirtualShelf PRIVATE ${SQLite3_INCLUDE_DIRS})
-target_link_libraries(VirtualShelf PRIVATE ${SQLite3_LIBRARIES})
+target_link_libraries(VirtualShelf libtui SQLite::SQLite3)
+    
+target_link_directories(VirtualShelf PRIVATE ${CMAKE_BINARY_DIR})
 
+
+# GTest
 enable_testing()
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
 
 add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
 target_link_libraries(VirtualShelfTests GTest::GTest GTest::Main libtui SQLite::SQLite3)
