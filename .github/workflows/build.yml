@@ -46,7 +46,7 @@ jobs:
       - run: python3 -m pip install gitpython
       - name: Build project
         run: 
-          python3 .github/builder.py -o ./dist -t Release
+          python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t Release
 
       - name: Rename binary
         run: 
