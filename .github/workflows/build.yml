@@ -45,6 +45,7 @@ jobs:
 
       - name: Build project
         run: 
+          pip install gitpython
           python3 .github/builder.py -o ./dist -t Release
 
       - name: Rename binary
