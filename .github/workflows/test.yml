@@ -21,7 +21,7 @@ jobs:
         run: cd libtui && go build -buildmode=c-archive -o ../libtui.lib .
       
       - name: Upload libtui.lib
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: libtui.lib
           path: libtui.lib
@@ -89,7 +89,7 @@ jobs:
       run: python3 -m pip install gitpython
 
     - name: Download libtui
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: libtui.lib
         path: ./libtui
