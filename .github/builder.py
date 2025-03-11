@@ -32,7 +32,7 @@ def build(build_type):
 
     logger.info(f"Configuring project ({build_type} mode)...")
     subprocess.run(
-        ["cmake", "..", f"-DCMAKE_BUILD_TYPE={build_type}", "-DPLATFROM=linux"], cwd=BUILD_PATH, check=True,
+        ["cmake", "..", f"-DCMAKE_BUILD_TYPE={build_type}", "-DPLATFORM=linux"], cwd=BUILD_PATH, check=True,
         env=os.environ
     )
 

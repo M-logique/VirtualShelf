@@ -57,7 +57,8 @@ jobs:
 
       - name: Build Dockerized project
         run: |
-          docker build -t virtualshelf .
+          docker buildx create --use
+          docker buildx build --platform linux/amd64 -t virtualshelf --load .
           docker run --rm -v $(pwd):/output virtualshelf
         if: matrix.os == 'windows-latest'
 
