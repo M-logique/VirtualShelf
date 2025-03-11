@@ -94,7 +94,15 @@ jobs:
         name: libtui.lib
         path: ./libtui
 
+    - name: Setup windows build requirements
+      run: |
+        apt update && apt install -y \
+        mingw-w64 \
+        sqlite3 \
+        libsqlite3-dev \
+
     - name: Build project 
       run: |
+        git clone https://github.com/SqliteModernCpp/sqlite_modern_cpp.git --depth 1
         cmake -S . -B build-win -DPLATFORM=windows -DCMAKE_VERBOSE_MAKEFILE=ON -DLIBTUI_PATH=libtui/libtui.lib
         cmake --build build-win
