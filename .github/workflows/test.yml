@@ -55,8 +55,15 @@ jobs:
         run: cd libtui && go build -buildmode=c-archive -o ../libtui.lib .
         if: matrix.os == 'windows-latest'
 
+      - uses: docker/setup-buildx-action@v3
+        if: matrix.os == 'windows-latest'
+      
+      - uses: docker/setup-qemu-action@v3
+        if: matrix.os == 'windows-latest'
+
       - name: Build the image
         run: docker buildx build --platform linux/amd64 -t virtualshelf --load .
+        if: matrix.os == 'windows-latest'
       
       - name: Copy output
         run: |
