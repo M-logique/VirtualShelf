@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         # arch: [amd64, arm64]  # Add support for multiple architectures
 
     steps:
@@ -55,10 +55,11 @@ jobs:
         run: cd libtui && go build -buildmode=c-archive -o ../libtui.lib .
         if: matrix.os == 'windows-latest'
 
-      - name: Build Dockerized project
+      - name: Build the image
+        run: docker buildx build --platform linux/amd64 -t virtualshelf --load .
+      
+      - name: Copy output
         run: |
-          docker buildx create --use
-          docker buildx build --platform linux/amd64 -t virtualshelf --load .
           docker run --rm -v $(pwd):/output virtualshelf
         if: matrix.os == 'windows-latest'
 
