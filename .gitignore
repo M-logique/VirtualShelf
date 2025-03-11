@@ -71,7 +71,7 @@ CMakeUserPresets.json
 *.app
 
 # Build directory
-build/
+build**/
 
 # Temporary files
 bin/

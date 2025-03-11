@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [amd64, arm64]  # Add support for multiple architectures
+        # arch: [amd64, arm64]  # Add support for multiple architectures
 
     steps:
       
@@ -43,18 +43,27 @@ jobs:
         with:
           tag: v1.14.0
         
-      - name: Install sqlite for windows
-        run: choco install sqlite
-        if: ${{ matrix.os == 'windows-latest'}}
 
-      - name: Verify Go installation
-        run: go version
+      - 
+        name: Setup Docker
+        uses: docker/setup-docker-action@v4
+      
+      
+      - name: Build go project
+        run: go build -buildmode=c-archive -o libtui.lib ./libtui
+        if: matrix.os == 'windows-latest'
 
-      - name: Verify CMake installation
-        run: cmake --version
+      - name: Build Dockerized project
+        run: |
+          docker build -t virtualshelf .
+          docker run --rm -v $(pwd):/output virtualshelf
+        if: matrix.os == 'windows-latest'
+
+      
 
       - run: python3 -m pip install gitpython
 
       - name: Build project
         run: 
           python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t Release --test
+        if: matrix.os != 'windows-latest'
