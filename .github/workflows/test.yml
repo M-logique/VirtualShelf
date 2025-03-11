@@ -64,6 +64,7 @@ jobs:
       - name: Build the image
         if: matrix.os == 'windows-latest'
         run: docker buildx build --platform linux/amd64 -t virtualshelf --load .
+        
       
       - name: Copy output
         run: |
