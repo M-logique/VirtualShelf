@@ -34,12 +34,14 @@ jobs:
 
       - name: Install CMake
         uses: ssrobins/install-cmake@v1
+        if: matrix.os != 'windows-latest'
         with:
           version: '3.25.1'
 
         
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: Bacondish2023/setup-googletest@v1
+        if: matrix.os != 'windows-latest'
         with:
           tag: v1.14.0
         
@@ -50,7 +52,7 @@ jobs:
       
       
       - name: Build go project
-        run: go build -buildmode=c-archive -o libtui.lib ./libtui
+        run: cd libtui && go build -buildmode=c-archive -o ../libtui.lib .
         if: matrix.os == 'windows-latest'
 
       - name: Build Dockerized project
