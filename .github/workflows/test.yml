@@ -4,28 +4,40 @@ on:
   workflow_call:
 
 jobs: 
-  build:
-    name: Build and test
-    runs-on: ${{ matrix.os }}
-
-    permissions:
-      contents: read  # Minimal required permissions
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        # arch: [amd64, arm64]  # Add support for multiple architectures
+  build_libtui:
+    name: Build libtui.lib for windows
+    runs-on: windows-latest
 
     steps:
-      
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: ${{github.workspace}}/libtui/go.mod
+          go-version-file: ${{ github.workspace }}/libtui/go.mod
+
+      - name: Build libtui.lib
+        run: cd libtui && go build -buildmode=c-archive -o ../libtui.lib .
+      
+      - name: Upload libtui.lib
+        uses: actions/upload-artifact@v3
+        with:
+          name: libtui.lib
+          path: libtui.lib
+
+  build_linux:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ github.workspace }}/libtui/go.mod
     
       - name: Setup python
         uses: actions/setup-python@v2
@@ -34,48 +46,55 @@ jobs:
 
       - name: Install CMake
         uses: ssrobins/install-cmake@v1
-        if: matrix.os != 'windows-latest'
         with:
           version: '3.25.1'
 
-        
-      - uses: ilammy/msvc-dev-cmd@v1
-      - uses: Bacondish2023/setup-googletest@v1
-        if: matrix.os != 'windows-latest'
+      - name: Setup GoogleTest
+        uses: Bacondish2023/setup-googletest@v1
         with:
           tag: v1.14.0
-        
 
-      - 
-        name: Setup Docker
-        uses: docker/setup-docker-action@v4
-      
-      
-      - name: Build go project
-        run: cd libtui && go build -buildmode=c-archive -o ../libtui.lib .
-        if: matrix.os == 'windows-latest'
+      - name: Install GitPython
+        run: python3 -m pip install gitpython
 
-      - uses: docker/setup-buildx-action@v3
-        if: matrix.os == 'windows-latest'
-      
-      - uses: docker/setup-qemu-action@v3
-        if: matrix.os == 'windows-latest'
+      - name: Build project for linux
+        run: python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t Release --test -os linux
 
-      - name: Build the image
-        if: matrix.os == 'windows-latest'
-        run: docker buildx build --platform linux/amd64 -t virtualshelf --load .
-        
-      
-      - name: Copy output
-        run: |
-          docker run --rm -v $(pwd):/output virtualshelf
-        if: matrix.os == 'windows-latest'
 
-      
+  build_windows:
+    name: Build for windows
+    needs: build_libtui
+    runs-on: ubuntu-latest
 
-      - run: python3 -m pip install gitpython
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Build project
-        run: 
-          python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t Release --test
-        if: matrix.os != 'windows-latest'
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install CMake
+      uses: ssrobins/install-cmake@v1
+      with:
+        version: '3.25.1'
+
+    - name: Setup GoogleTest
+      uses: Bacondish2023/setup-googletest@v1
+      with:
+        tag: v1.14.0
+
+    - name: Install GitPython
+      run: python3 -m pip install gitpython
+
+    - name: Download libtui
+      uses: actions/download-artifact@v3
+      with:
+        name: libtui.lib
+        path: ./libtui
+
+    - name: Build project 
+      run: |
+        cmake -S . -B build-win -DPLATFORM=windows -DCMAKE_VERBOSE_MAKEFILE=ON -DLIBTUI_PATH=libtui/libtui.lib
+        cmake --build build-win

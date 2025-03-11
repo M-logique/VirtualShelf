@@ -27,12 +27,12 @@ def clean():
         logger.info("Build directory cleaned.")
 
 
-def build(build_type):
+def build(build_type, operating_system):
     os.makedirs(BUILD_PATH, exist_ok=True)
 
     logger.info(f"Configuring project ({build_type} mode)...")
     subprocess.run(
-        ["cmake", "..", f"-DCMAKE_BUILD_TYPE={build_type}", "-DPLATFORM=linux"], cwd=BUILD_PATH, check=True,
+        ["cmake", "..", f"-DCMAKE_BUILD_TYPE={build_type}", f"-DPLATFORM={operating_system}"], cwd=BUILD_PATH, check=True,
         env=os.environ
     )
 
@@ -117,6 +117,11 @@ if __name__ == "__main__":
         "--remove", "-rm", help="Removes the specified path", required=False, type=str
     )
     parser.add_argument("--test", "-tst", help="Runs tests", action="store_true")
+    parser.add_argument(
+        "--operating-system",
+        "-os",
+        choices=["windows", "linux"]
+    )
 
     args = parser.parse_args()
 
@@ -128,7 +133,7 @@ if __name__ == "__main__":
                 logger.info("Removing %s", p)
                 os.remove(p)
 
-    build(args.build_type)
+    build(args.build_type, args.operating_system)
     if args.output_dir:
         move_binary(args.output_dir)
 
