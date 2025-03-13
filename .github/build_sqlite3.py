@@ -2,7 +2,8 @@ import shutil
 import subprocess
 import sys
 from argparse import ArgumentParser
-from os import name as os_name, listdir
+from os import name as listdir
+from sys import platform
 from pathlib import Path
 from urllib.request import urlretrieve
 
@@ -12,7 +13,7 @@ SQLITE_ARCHIVE = Path("sqlite3.zip")
 
 
 def get_executable_alias(tool: str) -> str:
-    if os_name != "nt":
+    if platform.startswith("win"):
         if tool == "ar":
             return "C:\\tools\msys64\usr\\bin\\ar"
         return f"x86_64-w64-mingw32-{tool}" 
