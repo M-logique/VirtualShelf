@@ -23,6 +23,9 @@ add_executable(VirtualShelf main.cpp ${SRC_FILES})
 
 if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:MSVCRT)
+    target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:MSVCRT)
+    
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
 
     add_custom_command(
