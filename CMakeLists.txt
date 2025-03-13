@@ -23,8 +23,9 @@ add_executable(VirtualShelf main.cpp ${SRC_FILES})
 
 if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:MSVCRT)    
+    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)    
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
     add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/sqlite3.lib
@@ -66,7 +67,8 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
 
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
     if(MSVC)
-        target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:MSVCRT)
+        target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:LIBCMT)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     endif()
     target_link_libraries(
         VirtualShelfTests 
