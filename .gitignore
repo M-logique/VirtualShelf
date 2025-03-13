@@ -80,3 +80,5 @@ bin/
 .vscode/
 
 sqlite_modern_cpp/
+
+dist/** */

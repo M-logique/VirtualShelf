@@ -1,7 +1,12 @@
-name: Build
+name: Build and test
 
 on: 
   workflow_call:
+    inputs:
+      name:
+        description: 'The name of the binary'
+        required: true
+        type: string
 
 jobs: 
   build:
@@ -15,7 +20,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [amd64, arm64]  # Add support for multiple architectures
 
     steps:
       
@@ -42,10 +46,6 @@ jobs:
         with:
           tag: v1.14.0
 
-      - name: Install sqlite for windows
-        run: choco install sqlite
-        if: ${{ matrix.os == 'windows-latest'}}
-        
 
       - name: Verify Go installation
         run: go version
@@ -53,19 +53,18 @@ jobs:
       - name: Verify CMake installation
         run: cmake --version
 
-      - run: python3 -m pip install gitpython
-      - name: Build project
+      - name: Build project and test
         run: 
-          python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t Release
+          python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t 
 
       - name: Rename binary
         run: 
           python3 .github/rename.py ./dist
         env: 
-          ARCH: ${{ matrix.arch }}-${{matrix.os}}
+          INF: ${{matrix.os}}
 
       - name: Upload Binary artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-${{ matrix.arch }}.bin
+          name: ${{inputs.name}}-${{ matrix.os }}.bin
           path: dist/
