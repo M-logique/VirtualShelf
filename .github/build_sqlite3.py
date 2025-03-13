@@ -67,6 +67,7 @@ def main():
 
     args = arg_parser.parse_args()
     build(args.output)
+    print("Output files: ", *listdir(args.output), sep=" ,")
 
 
 if __name__ == "__main__":

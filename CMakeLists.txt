@@ -42,18 +42,18 @@ else()
 endif()
 
 add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/libtui.a
-    COMMAND go build -buildmode=c-archive -o ${CMAKE_BINARY_DIR}/libtui.a ${GO_FILES}
+    OUTPUT ${LIBTUI_PATH}
+    COMMAND go build -buildmode=c-archive -o ${LIBTUI_PATH} ${GO_FILES}
     WORKING_DIRECTORY ${GO_SOURCE_DIR}
     COMMENT "Building Go project as a static library"
 )
 
 
 
-add_custom_target(BuildGolang ALL DEPENDS ${CMAKE_BINARY_DIR}/libtui.a)
-add_custom_target(BuildSQlite3 ALL DEPENDS ${CMAKE_BINARY_DIR}/libsqlite3.a)
+add_custom_target(BuildGolang ALL DEPENDS ${LIBTUI_PATH})
+add_custom_target(BuildSQlite3 ALL DEPENDS ${LIBSQLITE3_PATH})
 
-target_link_libraries(VirtualShelf ${CMAKE_BINARY_DIR}/libtui.a ${CMAKE_BINARY_DIR}/libsqlite3.a)
+target_link_libraries(VirtualShelf ${LIBTUI_PATH} ${LIBSQLITE3_PATH})
 
 add_dependencies(VirtualShelf BuildGolang BuildSQlite3)
 
