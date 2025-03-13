@@ -9,7 +9,7 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
 set(GO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libtui)
 set(LIBTUI_PATH ${CMAKE_BINARY_DIR}/libtui.a)
-set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/libsqlite3.a)
+# set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/libsqlite3.a)
 
 include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
 include_directories(${CMAKE_SOURCE_DIR}/sqlite_modern_cpp/hdr)
@@ -21,11 +21,24 @@ file(GLOB GO_FILES ${GO_SOURCE_DIR}/*.go)
 add_executable(VirtualShelf main.cpp ${SRC_FILES})
 
 
-if(WIN32)
-    # Windows-specific options
+if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
+    set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
 
+    add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/sqlite3.lib
+        COMMAND python3 build_sqlite3.py -o ${CMAKE_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/.github
+        COMMENT "Building SQLite3 library (for windows)"
+    )
+else()
+    set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/libsqlite3.a)
+    add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/libsqlite3.a
+        COMMAND python3 build_sqlite3.py -o ${CMAKE_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/.github
+        COMMENT "Building SQLite3 library (for unix)"
+    )
 endif()
 
 add_custom_command(
@@ -35,12 +48,6 @@ add_custom_command(
     COMMENT "Building Go project as a static library"
 )
 
-add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/libsqlite3.a
-    COMMAND python3 build_sqlite3.py -o ${CMAKE_BINARY_DIR}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/.github
-    COMMENT "Building SQLite3 library"
-)
 
 
 add_custom_target(BuildGolang ALL DEPENDS ${CMAKE_BINARY_DIR}/libtui.a)

@@ -11,13 +11,6 @@ ZIP_OUT = Path("sqlite3_out")
 SQLITE_ARCHIVE = Path("sqlite3.zip")
 
 
-def get_executable_alias(tool: str) -> str:
-    if os_name == "nt":
-        if tool == "ar":
-            # return "C:\\tools\\msys64\\usr\\bin\\ar.exe"
-            return "ar"
-        return f"x86_64-w64-mingw32-{tool}" 
-    return  tool
 
 
 def download_sqlite3():
@@ -44,16 +37,21 @@ def build(output_path: Path):
 
     sqlite_c_file = next(ZIP_OUT.glob("**/sqlite3.c"))
     sqlite_dir = sqlite_c_file.parent
-    print("Building sqlite3.o")
-    run_command(
-        [get_executable_alias("gcc"), "-c", "-o", "sqlite3.o", "sqlite3.c"], sqlite_dir
-    )
-    print("Files: ", *listdir(sqlite_dir), sep=", ")
-    print("Building libsqlite3.a")
-    run_command(
-        [get_executable_alias("ar"), "rcs", "libsqlite3.a", "sqlite3.o"], sqlite_dir
-    )
+    if os_name == "nt" and "MSVC" in sys.version:
+        # Build with MSVC
+        print("Using MSVC for compilation")
+        run_command(["cl", "/c", "/MD", "/O2", "sqlite3.c"], sqlite_dir)
+        run_command(["lib", "/OUT:sqlite3.lib", "sqlite3.obj"], sqlite_dir)
+        output_lib = sqlite_dir / "sqlite3.lib"
+    else:
+        # Build with gcc
+        print("Using gcc for compilation")
+        run_command(["gcc", "-c", "-o", "sqlite3.o", "sqlite3.c"], sqlite_dir)
+        run_command(["ar", "rcs", "libsqlite3.a", "sqlite3.o"], sqlite_dir)
+        output_lib = sqlite_dir / "libsqlite3.a"
 
+    shutil.move(output_lib, output_path)
+    print(f"SQLite3 static library saved to {output_path}")
     shutil.move(sqlite_dir / "libsqlite3.a", output_path)
     print(f"SQLite3 static library saved to {output_path}")
 

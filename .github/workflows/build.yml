@@ -36,18 +36,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install msys2
-        run: choco install msys2 -y
-        if: matrix.os == 'windows-latest'
-
-
-      - name: Install ar
-        run: |
-          C:\tools\msys64\usr\bin\pacman -Syu --noconfirm
-          C:\tools\msys64\usr\bin\pacman -S mingw-w64-x86_64-binutils --noconfirm
-          # pacman -S mingw-w64-x86_64-binutils
-          ar --version
-        if: matrix.os == 'windows-latest'
 
       - name: Install CMake
         uses: ssrobins/install-cmake@v1
