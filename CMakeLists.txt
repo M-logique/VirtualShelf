@@ -23,9 +23,7 @@ add_executable(VirtualShelf main.cpp ${SRC_FILES})
 
 if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:MSVCRT)
-    target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:MSVCRT)
-    
+    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:MSVCRT)    
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
 
     add_custom_command(
@@ -67,6 +65,9 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
 
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
+    if(MSVC)
+        target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:MSVCRT)
+    endif()
     target_link_libraries(
         VirtualShelfTests 
         GTest::GTest 
