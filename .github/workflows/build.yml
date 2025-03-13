@@ -58,7 +58,7 @@ jobs:
 
       - name: Build project and test
         run: 
-          python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t 
+          python3 ${{ github.workspace }}/.github/builder.py -o ./dist
 
       - name: Rename binary
         run: 
