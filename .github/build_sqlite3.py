@@ -12,7 +12,7 @@ SQLITE_ARCHIVE = Path("sqlite3.zip")
 
 
 def get_executable_alias(tool: str) -> str:
-    if os_name == "nt":
+    if os_name != "nt":
         if tool == "ar":
             return "C:\\tools\msys64\usr\\bin\\ar"
         return f"x86_64-w64-mingw32-{tool}" 
