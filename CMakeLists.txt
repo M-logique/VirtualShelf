@@ -24,16 +24,16 @@ if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 
     # Remove default libraries to avoid conflicts
-    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)
-    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMTD)
+    target_link_options(VirtualShelf /NODEFAULTLIB:LIBCMT)
+    target_link_options(VirtualShelf /NODEFAULTLIB:LIBCMTD)
     
     # Set the runtime library based on build type (Debug/Release)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
-        target_link_libraries(VirtualShelf PRIVATE msvcrtd.lib legacy_stdio_definitions.lib)
+        target_link_libraries(VirtualShelf msvcrtd.lib legacy_stdio_definitions.lib)
     else()
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
-        target_link_libraries(VirtualShelf PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
+        target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
     endif()
 
     # Link against SQLite3 for MSVC
@@ -82,8 +82,8 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
     if(MSVC)
             # Remove default libraries to avoid conflicts
-        target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)
-        target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMTD)
+        target_link_options(VirtualShelf /NODEFAULTLIB:LIBCMT)
+        target_link_options(VirtualShelf /NODEFAULTLIB:LIBCMTD)
 
         # Use MSVC runtime flags for the tests
         if(CMAKE_BUILD_TYPE STREQUAL "Debug")
