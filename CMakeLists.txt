@@ -24,7 +24,7 @@ add_executable(VirtualShelf main.cpp ${SRC_FILES})
 if (MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
     # target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)    
-    target_link_libraries(Atomic msvcrt.lib legacy_stdio_definitions.lib)
+    target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
     add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/sqlite3.lib
@@ -67,7 +67,7 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
     if(MSVC)
         # target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:LIBCMT)
-        target_link_libraries(Atomic msvcrt.lib legacy_stdio_definitions.lib)
+        target_link_libraries(VirtualShelfTests msvcrt.lib legacy_stdio_definitions.lib)
     endif()
     target_link_libraries(
         VirtualShelfTests 
