@@ -46,7 +46,7 @@ jobs:
           C:\tools\msys64\usr\bin\pacman -Syu --noconfirm
           C:\tools\msys64\usr\bin\pacman -S mingw-w64-x86_64-binutils --noconfirm
           # pacman -S mingw-w64-x86_64-binutils
-          C:\tools\msys64\usr\bin\ar.exe --version
+          ar --version
         if: matrix.os == 'windows-latest'
 
       - name: Install CMake
