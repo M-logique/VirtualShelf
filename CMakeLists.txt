@@ -9,7 +9,6 @@ set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
 set(GO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libtui)
 set(LIBTUI_PATH ${CMAKE_BINARY_DIR}/libtui.a)
-# set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/libsqlite3.a)
 
 include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
 include_directories(${CMAKE_SOURCE_DIR}/sqlite_modern_cpp/hdr)
@@ -20,11 +19,24 @@ file(GLOB GO_FILES ${GO_SOURCE_DIR}/*.go)
 
 add_executable(VirtualShelf main.cpp ${SRC_FILES})
 
-
 if (MSVC)
+    # Define compiler flag to avoid security warnings
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    # target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)    
-    target_link_libraries(VirtualShelf msvcrt.lib legacy_stdio_definitions.lib)
+
+    # Remove default libraries to avoid conflicts
+    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)
+    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMTD)
+    
+    # Set the runtime library based on build type (Debug/Release)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
+        target_link_libraries(VirtualShelf PRIVATE msvcrtd.lib legacy_stdio_definitions.lib)
+    else()
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+        target_link_libraries(VirtualShelf PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
+    endif()
+
+    # Link against SQLite3 for MSVC
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
     add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/sqlite3.lib
@@ -33,6 +45,7 @@ if (MSVC)
         COMMENT "Building SQLite3 library (for windows)"
     )
 else()
+    # For Unix-like systems (Linux, macOS)
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/libsqlite3.a)
     add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/libsqlite3.a
@@ -42,6 +55,7 @@ else()
     )
 endif()
 
+# Build Go project as a static library
 add_custom_command(
     OUTPUT ${LIBTUI_PATH}
     COMMAND go build -buildmode=c-archive -o ${LIBTUI_PATH} ${GO_FILES}
@@ -49,15 +63,16 @@ add_custom_command(
     COMMENT "Building Go project as a static library"
 )
 
-
-
+# Define custom targets to ensure the required libraries are built
 add_custom_target(BuildGolang ALL DEPENDS ${LIBTUI_PATH})
 add_custom_target(BuildSQlite3 ALL DEPENDS ${LIBSQLITE3_PATH})
 
+# Link necessary libraries to the VirtualShelf executable
 target_link_libraries(VirtualShelf ${LIBTUI_PATH} ${LIBSQLITE3_PATH})
 
 add_dependencies(VirtualShelf BuildGolang BuildSQlite3)
 
+# Enable tests if specified
 if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     enable_testing()
     find_package(GTest REQUIRED)
@@ -66,9 +81,19 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
 
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
     if(MSVC)
-        # target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:LIBCMT)
-        target_link_libraries(VirtualShelfTests msvcrt.lib legacy_stdio_definitions.lib)
+            # Remove default libraries to avoid conflicts
+        target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT)
+        target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMTD)
+
+        # Use MSVC runtime flags for the tests
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+            target_link_libraries(VirtualShelfTests PRIVATE msvcrtd.lib legacy_stdio_definitions.lib)
+        else()
+            target_link_libraries(VirtualShelfTests PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
+        endif()
     endif()
+
+    # Link GTest and other libraries for testing
     target_link_libraries(
         VirtualShelfTests 
         GTest::GTest 
