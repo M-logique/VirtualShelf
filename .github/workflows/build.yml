@@ -53,6 +53,12 @@ jobs:
       - name: Verify CMake installation
         run: cmake --version
 
+      - name: Install mingw32
+        run: | 
+          choco install mingw32
+          choco install binutils
+        if: matrix.os == 'windows-latest'
+
       - name: Build project and test
         run: 
           python3 ${{ github.workspace }}/.github/builder.py -o ./dist -t 
