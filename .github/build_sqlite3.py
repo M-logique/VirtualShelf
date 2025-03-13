@@ -2,7 +2,7 @@ import shutil
 import subprocess
 import sys
 from argparse import ArgumentParser
-from os import name as os_name
+from os import name as os_name, listdir
 from pathlib import Path
 from urllib.request import urlretrieve
 
@@ -43,6 +43,7 @@ def build(output_path: Path):
     run_command(
         [get_executable_alias("gcc"), "-c", "-o", "sqlite3.o", "sqlite3.c"], sqlite_dir
     )
+    print("Files: ", *listdir(sqlite_dir), sep=", ")
     print("Building libsqlite3.a")
     run_command(
         [get_executable_alias("ar"), "rcs", "libsqlite3.a", "sqlite3.o"], sqlite_dir
