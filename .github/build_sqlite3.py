@@ -2,15 +2,13 @@ import shutil
 import subprocess
 import sys
 from argparse import ArgumentParser
-from os import name as os_name, listdir
+from os import name as os_name, listdir, environ
 from pathlib import Path
 from urllib.request import urlretrieve
 
 SQLITE3_DOWNLOAD_URL = "https://www.sqlite.org/2025/sqlite-amalgamation-3490100.zip"
 ZIP_OUT = Path("sqlite3_out")
 SQLITE_ARCHIVE = Path("sqlite3.zip")
-
-
 
 
 def download_sqlite3():
@@ -37,7 +35,9 @@ def build(output_path: Path):
 
     sqlite_c_file = next(ZIP_OUT.glob("**/sqlite3.c"))
     sqlite_dir = sqlite_c_file.parent
-    if os_name == "nt" and "MSVC" in sys.version:
+    output_lib = None
+
+    if os_name == "nt" and shutil.which("cl"):
         # Build with MSVC
         print("Using MSVC for compilation")
         run_command(["cl", "/c", "/MD", "/O2", "sqlite3.c"], sqlite_dir)
@@ -50,10 +50,9 @@ def build(output_path: Path):
         run_command(["ar", "rcs", "libsqlite3.a", "sqlite3.o"], sqlite_dir)
         output_lib = sqlite_dir / "libsqlite3.a"
 
-    shutil.move(output_lib, output_path)
-    print(f"SQLite3 static library saved to {output_path}")
-    shutil.move(sqlite_dir / "libsqlite3.a", output_path)
-    print(f"SQLite3 static library saved to {output_path}")
+    if output_lib and output_lib.exists():
+        shutil.move(output_lib, output_path)
+        print(f"SQLite3 static library saved to {output_path}")
 
     # Cleanup
     SQLITE_ARCHIVE.unlink(missing_ok=True)
