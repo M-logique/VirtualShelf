@@ -53,10 +53,11 @@ jobs:
       - name: Verify CMake installation
         run: cmake --version
 
-      - name: Install mingw32
-        run: | 
-          choco install mingw32
-          choco install binutils
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+          cc: 1
         if: matrix.os == 'windows-latest'
 
       - name: Build project and test
