@@ -23,9 +23,6 @@ if (MSVC)
     # Define compiler flag to avoid security warnings
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 
-    # Remove default libraries to avoid conflicts
-    target_link_options(VirtualShelf PRIVATE /NODEFAULTLIB:LIBCMT /NODEFAULTLIB:LIBCMTD)
-
     # Set the runtime library based on build type (Debug/Release)
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
@@ -80,8 +77,6 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
 
     if(MSVC)
-        # Remove default libraries to avoid conflicts
-        target_link_options(VirtualShelfTests PRIVATE /NODEFAULTLIB:LIBCMT /NODEFAULTLIB:LIBCMTD)
 
         # Use MSVC runtime flags for the tests
         if(CMAKE_BUILD_TYPE STREQUAL "Debug")
