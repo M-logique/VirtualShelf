@@ -32,7 +32,7 @@ def build(build_tests: bool):
 
     logger.info(f"Configuring project ...")
     subprocess.run(
-        ["cmake", "..", "-DBUILD_TESTS=ON" if build_tests else "-DBUILD_TESTS=OFF"],
+        ["cmake", "..", "-DBUILD_TESTS=ON" if build_tests else "-DBUILD_TESTS=OFF", "-DCMAKE_BUILD_TYPE=Release"],
         cwd=BUILD_PATH,
         check=True,
         env=os.environ,

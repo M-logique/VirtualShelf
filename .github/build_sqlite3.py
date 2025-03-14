@@ -43,11 +43,10 @@ def build(output_path: Path):
 
     if os_name == "nt" and shutil.which("cl"):
         # Build with MSVC
-        # print("Using MSVC for compilation")
-        # run_command(["cl", "/c", "/MTd", "/O2", "sqlite3.c"], sqlite_dir)
-        # run_command(["lib", "/OUT:sqlite3.lib", "sqlite3.obj"], sqlite_dir)
-        # output_lib = sqlite_dir / "sqlite3.lib"
-        output_lib = sqlite_dir / "sqlite3.dll"
+        print("Using MSVC for compilation")
+        run_command(["cl", "/c", "/MD", "/O2", "sqlite3.c"], sqlite_dir)
+        run_command(["lib", "/OUT:sqlite3.lib", "sqlite3.obj"], sqlite_dir)
+        output_lib = sqlite_dir / "sqlite3.lib"
     else:
         # Build with gcc
         print("Using gcc for compilation")
