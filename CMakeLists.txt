@@ -36,7 +36,7 @@ if (MSVC)
     endif()
 
     # Link against SQLite3 for MSVC
-    set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
+    set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.dll)
     add_custom_command(
         OUTPUT ${LIBSQLITE3_PATH}
         COMMAND python3 build_sqlite3.py -o ${CMAKE_BINARY_DIR}

@@ -7,16 +7,20 @@ from pathlib import Path
 from urllib.request import urlretrieve
 
 SQLITE3_DOWNLOAD_URL = "https://www.sqlite.org/2025/sqlite-amalgamation-3490100.zip"
+SQLITE3_WIN = "https://www.sqlite.org/2025/sqlite-dll-win-x64-3490100.zip"
 ZIP_OUT = Path("sqlite3_out")
 SQLITE_ARCHIVE = Path("sqlite3.zip")
 
 
 def download_sqlite3():
-    if not SQLITE_ARCHIVE.exists():
-        print(f"Downloading SQLite3 from {SQLITE3_DOWNLOAD_URL}...")
-        urlretrieve(SQLITE3_DOWNLOAD_URL, SQLITE_ARCHIVE)
+    if not os_name == "nt":
+        if not SQLITE_ARCHIVE.exists():
+            print(f"Downloading SQLite3 from {SQLITE3_DOWNLOAD_URL}...")
+            urlretrieve(SQLITE3_DOWNLOAD_URL, SQLITE_ARCHIVE)
+        else:
+            print("SQLite3 archive already exists. Skipping download.")
     else:
-        print("SQLite3 archive already exists. Skipping download.")
+        urlretrieve(SQLITE3_WIN, SQLITE_ARCHIVE)
 
     ZIP_OUT.mkdir(exist_ok=True)
     shutil.unpack_archive(SQLITE_ARCHIVE, ZIP_OUT)
@@ -39,10 +43,11 @@ def build(output_path: Path):
 
     if os_name == "nt" and shutil.which("cl"):
         # Build with MSVC
-        print("Using MSVC for compilation")
-        run_command(["cl", "/c", "/MTd", "/O2", "sqlite3.c"], sqlite_dir)
-        run_command(["lib", "/OUT:sqlite3.lib", "sqlite3.obj"], sqlite_dir)
-        output_lib = sqlite_dir / "sqlite3.lib"
+        # print("Using MSVC for compilation")
+        # run_command(["cl", "/c", "/MTd", "/O2", "sqlite3.c"], sqlite_dir)
+        # run_command(["lib", "/OUT:sqlite3.lib", "sqlite3.obj"], sqlite_dir)
+        # output_lib = sqlite_dir / "sqlite3.lib"
+        output_lib = sqlite_dir / "sqlite3.dll"
     else:
         # Build with gcc
         print("Using gcc for compilation")
