@@ -7,20 +7,17 @@ from pathlib import Path
 from urllib.request import urlretrieve
 
 SQLITE3_DOWNLOAD_URL = "https://www.sqlite.org/2025/sqlite-amalgamation-3490100.zip"
-SQLITE3_WIN = "https://www.sqlite.org/2025/sqlite-dll-win-x64-3490100.zip"
 ZIP_OUT = Path("sqlite3_out")
 SQLITE_ARCHIVE = Path("sqlite3.zip")
 
 
 def download_sqlite3():
-    if not os_name == "nt":
-        if not SQLITE_ARCHIVE.exists():
-            print(f"Downloading SQLite3 from {SQLITE3_DOWNLOAD_URL}...")
-            urlretrieve(SQLITE3_DOWNLOAD_URL, SQLITE_ARCHIVE)
-        else:
-            print("SQLite3 archive already exists. Skipping download.")
+
+    if not SQLITE_ARCHIVE.exists():
+        print(f"Downloading SQLite3 from {SQLITE3_DOWNLOAD_URL}...")
+        urlretrieve(SQLITE3_DOWNLOAD_URL, SQLITE_ARCHIVE)
     else:
-        urlretrieve(SQLITE3_WIN, SQLITE_ARCHIVE)
+        print("SQLite3 archive already exists. Skipping download.")
 
     ZIP_OUT.mkdir(exist_ok=True)
     shutil.unpack_archive(SQLITE_ARCHIVE, ZIP_OUT)
