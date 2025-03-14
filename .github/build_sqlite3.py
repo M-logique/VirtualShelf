@@ -37,7 +37,7 @@ def run_command(cmd, cwd):
 def build(output_path: Path):
     download_sqlite3()
 
-    sqlite_c_file = next(ZIP_OUT.glob("**/sqlite3.c" if os_name == "nt" else "**/sqlite3.dll"))
+    sqlite_c_file = next(ZIP_OUT.glob("**/sqlite3.c" if os_name != "nt" else "**/sqlite3.dll"))
     sqlite_dir = sqlite_c_file.parent
     output_lib = None
 
