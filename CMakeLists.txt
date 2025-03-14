@@ -22,15 +22,8 @@ add_executable(VirtualShelf main.cpp ${SRC_FILES})
 if (MSVC)
     # Define compiler flag to avoid security warnings
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-
-    # Set the runtime library based on build type (Debug/Release)
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDebug")
-        target_link_libraries(VirtualShelf PRIVATE msvcrtd.lib legacy_stdio_definitions.lib)
-    else()
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
-        target_link_libraries(VirtualShelf PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
-    endif()
+    target_link_libraries(VirtualShelf PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
     # Link against SQLite3 for MSVC
     set(LIBSQLITE3_PATH ${CMAKE_BINARY_DIR}/sqlite3.lib)
@@ -77,13 +70,9 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
 
     if(MSVC)
-
         # Use MSVC runtime flags for the tests
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            target_link_libraries(VirtualShelfTests PRIVATE msvcrtd.lib legacy_stdio_definitions.lib)
-        else()
-            target_link_libraries(VirtualShelfTests PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
-        endif()
+        target_link_libraries(VirtualShelfTests PRIVATE msvcrt.lib legacy_stdio_definitions.lib)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
     endif()
 
     # Link GTest and other libraries for testing
