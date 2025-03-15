@@ -11,7 +11,7 @@ on:
 jobs: 
   build:
     name: Build binaries
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.config.build-os }}
 
     permissions:
       contents: read  # Minimal required permissions
@@ -19,7 +19,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        config:
+          - { build-os: "ubuntu-latest", build-slot: "github-action-linux", inf: "linux"}
+          - { build-os: "ubuntu-latest", build-slot: "github-action-windows", inf: "win"}
+          - { build-os: "macos-latest", build-slot: "github-action-darwin", inf: "darwin"}    
 
     steps:
       
@@ -55,19 +58,19 @@ jobs:
       - name: Verify CMake installation
         run: cmake --version
 
-
       - name: Build project and test
         run: 
-          python3 ${{ github.workspace }}/.github/builder.py -o ./dist
+          python3 ${{ github.workspace }}/.github/builder.py -o ./dist -s ${{matrix.config.build-slot}} --test
 
       - name: Rename binary
         run: 
           python3 .github/rename.py ./dist
         env: 
-          INF: ${{matrix.os}}
+          INF: ${{matrix.config.inf}}
+          NAME: ${{inputs.name}}
 
       - name: Upload Binary artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{inputs.name}}-${{ matrix.os }}.bin
+          name: ${{inputs.name}}-${{ matrix.config.inf }}.bin
           path: dist/
