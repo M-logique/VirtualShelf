@@ -44,13 +44,10 @@ jobs:
         uses: ssrobins/install-cmake@v1
         with:
           version: '3.25.1'
-          
-      - uses: ilammy/msvc-dev-cmd@v1
-      - uses: Bacondish2023/setup-googletest@v1
-        with:
-          tag: v1.14.0
-
-
+      
+      - name: Install MinGW
+        run: mingw-w64-tools
+        if: matrix.config.build-slot == 'github-actions-windows'
 
       - name: Verify Go installation
         run: go version
