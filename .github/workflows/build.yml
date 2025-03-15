@@ -49,9 +49,12 @@ jobs:
         uses: Bacondish2023/setup-googletest@v1
         with:
           tag: v1.14.0
+
+
+      
       - name: Install MinGW
         if: matrix.config.build-slot == 'github-actions-windows'
-        run: mingw-w64-tools
+        run: apt install mingw-w64-tools
 
       - name: Verify Go installation
         run: go version
