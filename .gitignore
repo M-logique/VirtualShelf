@@ -82,3 +82,5 @@ bin/
 sqlite_modern_cpp/
 
 dist/** */
+
+sqlite3.**

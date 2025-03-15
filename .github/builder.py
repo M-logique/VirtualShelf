@@ -4,8 +4,8 @@ import os
 import shutil
 import subprocess
 import sys
-from urllib.request import urlretrieve
 from typing import Optional
+from urllib.request import urlretrieve
 
 BUILD_PATH = "build"
 
@@ -32,7 +32,12 @@ def build(build_tests: bool):
 
     logger.info(f"Configuring project ...")
     subprocess.run(
-        ["cmake", "..", "-DBUILD_TESTS=ON" if build_tests else "-DBUILD_TESTS=OFF", "-DCMAKE_BUILD_TYPE=Release"],
+        [
+            "cmake",
+            "..",
+            "-DBUILD_TESTS=ON" if build_tests else "-DBUILD_TESTS=OFF",
+            "-DCMAKE_BUILD_TYPE=Release",
+        ],
         cwd=BUILD_PATH,
         check=True,
         env=os.environ,
@@ -123,7 +128,7 @@ if __name__ == "__main__":
         else:
             download_and_extract_zip()
 
-    parser = argparse.ArgumentParser(description="C++ Project Build Script")
+    parser = argparse.ArgumentParser(description="VirtualShelf Project Build Script")
     parser.add_argument(
         "--purge",
         "-p",
