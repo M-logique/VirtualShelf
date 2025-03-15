@@ -1,0 +1,29 @@
+name: Continuous Delivery (CD)
+
+
+on:
+  workflow_dispatch: 
+    
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+
+  build:
+    name: Build Project
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+    permissions: write-all
+    with:
+      name: VirtalShelf
+    
+  release:
+    name: Release Project
+    uses: ./.github/workflows/release.yml
+    secrets: inherit
+    permissions: write-all
+    needs: build
+    with:
+      dry-run: false
