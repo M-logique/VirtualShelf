@@ -10,7 +10,7 @@ struct Book {
     string title;
     string author;
     int year;
-    int availableCopies;
+    int available_copies;
     int id;
 };
 
@@ -19,7 +19,7 @@ Book registerBook(
     const string& author,
     sqlite::database& db,
     int year,
-    int availableCopies
+    int available_copies
 );
 
 

@@ -1,8 +1,8 @@
 #include <sqlite_modern_cpp.h>
 #include <string>
-#include <Utils.h>
-#include <Books.h>
-#include <Options.h>
+#include <utils.h>
+#include <books.h>
+#include <options.h>
 #include <sstream>
 #include <libtui.h>
 
@@ -35,7 +35,7 @@ void addBook(database& db)
         << "{{.Cyan}}Title: {{.Magenta}}" << book.title << endl
         << "{{.Cyan}}Author: {{.Magenta}}" << book.author << endl
         << "{{.Cyan}}Publication Year: {{.Magenta}}" << book.year << endl
-        << "{{.Cyan}}Available Copies: {{.Magenta}}" << book.availableCopies << endl
+        << "{{.Cyan}}Available Copies: {{.Magenta}}" << book.available_copies << endl
         << "{{.Reset}}"
         << endl;
 

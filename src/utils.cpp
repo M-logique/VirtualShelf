@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <sqlite_modern_cpp.h>
-#include <Utils.h>
+#include <utils.h>
 #include <libtui.h>
 #include <sstream>
 

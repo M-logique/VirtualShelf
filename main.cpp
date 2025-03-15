@@ -1,9 +1,9 @@
 #include <iostream>
 #include <libtui.h>
-#include <Utils.h>
+#include <utils.h>
 #include <sqlite_modern_cpp.h>
 #include <string>
-#include <Options.h>
+#include <options.h>
 
 using namespace std;
 using namespace sqlite;

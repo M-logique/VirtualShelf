@@ -8,7 +8,7 @@ struct Book {
     string author;
 
     int year;
-    int availableCopies;
+    int available_copies;
     int id;
 };
 
@@ -17,7 +17,7 @@ Book registerBook(
     const string& author,
     sqlite::database& db,
     int year,
-    int availableCopies
+    int available_copies
 )
 {
     db << 
@@ -25,14 +25,14 @@ Book registerBook(
         << year 
         << title 
         << author 
-        << availableCopies;
+        << available_copies;
 
     int recordID = static_cast<int>(db.last_insert_rowid());
 
     Book book;
     book.title = title;
     book.author = author;
-    book.availableCopies = availableCopies;
+    book.available_copies = available_copies;
     book.year = year;
     book.id = recordID;
 
