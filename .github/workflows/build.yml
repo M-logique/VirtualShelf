@@ -54,7 +54,7 @@ jobs:
       
       - name: Install MinGW
         if: matrix.config.build-slot == 'github-actions-windows'
-        run: apt install mingw-w64-tools
+        run: sudo apt install mingw-w64-tools -y
 
       - name: Verify Go installation
         run: go version
