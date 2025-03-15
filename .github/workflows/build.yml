@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { build-os: "ubuntu-latest", build-slot: "github-action-linux", inf: "linux"}
-          - { build-os: "ubuntu-latest", build-slot: "github-action-windows", inf: "win"}
-          - { build-os: "macos-latest", build-slot: "github-action-darwin", inf: "darwin"}    
+          - { build-os: "ubuntu-latest", build-slot: "github-actions-linux", inf: "linux"}
+          - { build-os: "ubuntu-latest", build-slot: "github-actions-windows", inf: "win"}
+          - { build-os: "macos-latest", build-slot: "github-actions-darwin", inf: "darwin"}    
 
     steps:
       
