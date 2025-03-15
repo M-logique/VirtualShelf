@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <sqlite_modern_cpp.h>
-#include "Utils.h"
+#include "utils.h"
 
 using namespace sqlite;
 
