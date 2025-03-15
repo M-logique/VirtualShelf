@@ -8,6 +8,37 @@ from typing import Optional
 from urllib.request import urlretrieve
 
 BUILD_PATH = "build"
+BUILD_SLOTS = {
+    "github-actions-windows": {
+        "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
+        "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
+        "AR": "x86_64-w64-mingw32-ar",
+        "GOOS": "windows",
+    },
+    "github-actions-linux": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "AR": "ar",
+        "GOOS": "linux",
+    },
+    "github-actions-darwin": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "AR": "ar",
+        "GOOS": "darwin",
+    },
+}
+
+
+def get_os() -> str:
+    if sys.platform.startswith("linux"):
+        return "linux"
+    elif sys.platform.startswith("darwin"):
+        return "darwin"
+    elif sys.platform.startswith("win"):
+        return "windows"
+    else:
+        raise ValueError("Unsupported operating system")
 
 
 def setup_logger(
@@ -21,14 +52,19 @@ def setup_logger(
     return logging.getLogger(name or "BuildScript")
 
 
-def clean():
-    if os.path.exists(BUILD_PATH):
-        shutil.rmtree(BUILD_PATH)
+def get_build_flags(slot: dict) -> list:
+
+    return [f"-D{key}={value}" for key, value in slot.items()]
+
+
+def clean(p):
+    if os.path.exists(p):
+        shutil.rmtree(p)
         logger.info("Build directory cleaned.")
 
 
-def build(build_tests: bool):
-    os.makedirs(BUILD_PATH, exist_ok=True)
+def build(build_tests: bool, slot: str, build_path: str):
+    os.makedirs(build_path, exist_ok=True)
 
     logger.info(f"Configuring project ...")
     subprocess.run(
@@ -37,21 +73,22 @@ def build(build_tests: bool):
             "..",
             "-DBUILD_TESTS=ON" if build_tests else "-DBUILD_TESTS=OFF",
             "-DCMAKE_BUILD_TYPE=Release",
+            *get_build_flags(BUILD_SLOTS[slot])
         ],
-        cwd=BUILD_PATH,
+        cwd=build_path,
         check=True,
         env=os.environ,
     )
 
     logger.info("Building project...")
     subprocess.run(
-        ["cmake", "--build", "."], cwd=BUILD_PATH, check=True, env=os.environ
+        ["cmake", "--build", "."], cwd=build_path, check=True, env=os.environ
     )
 
 
-def move_binary(destination: str):
+def move_binary(destination: str, build_path: str):
     # Search for files named VirtualShelf or VirtualShelf.*
-    for root, _, files in os.walk(BUILD_PATH):
+    for root, _, files in os.walk(build_path):
         for file in files:
             if (
                 file.startswith("VirtualShelf") and not "Tests" in file
@@ -159,27 +196,51 @@ if __name__ == "__main__":
     )
     parser.add_argument("--test", "-t", help="Runs tests", action="store_true")
 
+    parser.add_argument(
+        "--slot",
+        "-s",
+        help="Build slots config",
+        default=f"github-actions-{get_os()}",
+        type=lambda x: next((i for i in BUILD_SLOTS.keys() if x.lower().strip() in i)),
+    )
+    parser.add_argument(
+        "--build-path",
+        "-b",
+        type=str,
+        help="Specify a custom build directory",
+        default=BUILD_PATH,
+    )
+
     args = parser.parse_args()
+    if not args.slot:
+        raise ValueError("Invalid slot")
 
     if args.purge:
-        clean()
+        clean(args.build_path)
+    
     if args.remove:
         for p in args.remove.split(","):
             if os.path.exists(p):
                 logger.info("Removing %s", p)
                 os.remove(p)
 
-    build(args.test)
-    if args.output_dir:
-        move_binary(args.output_dir)
+    if args.test and "windows" in args.slot:
+        logger.warning("Sorry but testing is not supported for windows! (I hate windows)")
+    
+    t = args.test and not "windows" in args.slot
 
-    if args.test:
+    logger.info("Chosen slot: %s", args.slot)
+    build(t, args.slot, args.build_path)
+    if args.output_dir:
+        move_binary(args.output_dir, args.build_path)
+
+    if args.test and not "windows" in args.slot:
         logger.info("Running tests...")
-        subprocess.run(["ctest", "--output-on-failure"], check=True, cwd=BUILD_PATH)
+        subprocess.run(["ctest", "--output-on-failure"], check=True, cwd=args.build_path)
         logger.info("All tests were successfull")
 
-    if args.clear:
-        clean()
+    if t:
+        clean(args.build_path)
 
     if args.run:
         binary_path = find_executable(args.output_dir)
