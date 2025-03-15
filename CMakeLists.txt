@@ -52,7 +52,6 @@ add_custom_command(
     OUTPUT ${LIBTUI_PATH}
     COMMAND ${CMAKE_COMMAND} -E env
         GOOS=${GOOS}
-        GOARCH=amd64 
         CGO_ENABLED=1 
         CC=${CMAKE_C_COMPILER}
         CXX=${CMAKE_CXX_CIMPILER}
