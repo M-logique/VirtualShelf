@@ -5,6 +5,7 @@
 #include <options.h>
 #include <sstream>
 #include <libtui.h>
+#include <students.h>
 
 using namespace std;
 using namespace sqlite;
@@ -30,7 +31,7 @@ void addBook(database& db)
 
     cout << endl;
     typeText("Book Created!");
-    printer 
+    goout 
         << endl 
         << "{{.Cyan}}Title: {{.Magenta}}" << book.title << endl
         << "{{.Cyan}}Author: {{.Magenta}}" << book.author << endl
@@ -50,13 +51,13 @@ void showAllBooks(database& db)
 
     if (count == 0) 
     {
-        printer << "{{.Red}}There is no book in the shelf"
+        goout << "{{.Red}}There is no book in the shelf"
         << endl;
         GoPressEnter();
         return;
     }
 
-    printer << "{{.Blue}}[!]{{.Cyan}} Found " << count << " Books" 
+    goout << "{{.Blue}}[!]{{.Cyan}} Found " << count << " Books" 
     << "{{.Reset}}"
     << endl; 
 
@@ -66,7 +67,7 @@ void showAllBooks(database& db)
 
         row >> title >> year >> author >> avCps;
 
-        printer 
+        goout 
             << endl 
             << "{{.Cyan}}Title: {{.Magenta}}" << title << endl
             << "{{.Cyan}}Author: {{.Magenta}}" << author << endl
@@ -75,6 +76,34 @@ void showAllBooks(database& db)
             << "{{.Reset}}"
             << endl;
     } 
+
+    GoPressEnter();
+
+}
+
+void addStudent(database& db) 
+{
+    string name = getString("Enter the name of the student: ");
+    int student_id = getNum("Enter the id of the student: ");
+
+    Student student = registerStudent(
+        name,
+        student_id,
+        db
+    );
+
+    Clear();
+    GoPrintLogo();
+
+
+    cout << endl;
+    typeText("Student Registration was successfull!");
+    goout 
+        << endl 
+        << "{{.Cyan}}Name: {{.Magenta}}" << student.name << endl
+        << "{{.Cyan}}ID: {{.Magenta}}" << student.student_id << endl
+        << "{{.Reset}}"
+        << endl;
 
     GoPressEnter();
 

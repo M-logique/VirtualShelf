@@ -40,6 +40,9 @@ int main()
         case 1:
             showAllBooks(db);
             break;
+        case 2:
+            addStudent(db);
+            break;
         case 6:
             exit(0);
             break;

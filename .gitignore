@@ -84,3 +84,5 @@ sqlite_modern_cpp/
 dist/** */
 
 sqlite3.**
+
+dbfile.db

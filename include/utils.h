@@ -21,6 +21,6 @@ extern Printer prnt;
 
 void betterPrint(const std::string& text);
 
-extern Printer printer;
+extern Printer goout;
 
 #endif // UTILS_H

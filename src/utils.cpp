@@ -37,7 +37,7 @@ void setupDatabase(database& db)
         ");";
 
     db << 
-        "CREATE TABLE IF NOT EXISTS users("
+        "CREATE TABLE IF NOT EXISTS students("
         "   _id integer primary key autoincrement not null,"
         "   name text,"
         "   student_id integer"
@@ -108,4 +108,4 @@ Printer& Printer::operator<<(std::ostream& (*func)(std::ostream&)) {
     return *this;
 }
 
-Printer printer;
+Printer goout;

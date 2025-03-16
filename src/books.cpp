@@ -20,21 +20,15 @@ Book registerBook(
     int available_copies
 )
 {
+    int recordID;
     db << 
-        "INSERT INTO books (year,title,author,available_copies) values (?,?,?,?);"
+        "INSERT INTO books (year,title,author,available_copies) values (?,?,?,?) RETURNING _id;"
         << year 
         << title 
         << author 
-        << available_copies;
+        << available_copies
+        >> recordID;
 
-    int recordID = static_cast<int>(db.last_insert_rowid());
 
-    Book book;
-    book.title = title;
-    book.author = author;
-    book.available_copies = available_copies;
-    book.year = year;
-    book.id = recordID;
-
-    return book;
+    return Book{title, author, year, available_copies, recordID};
 }
