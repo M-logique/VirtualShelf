@@ -12,7 +12,7 @@ set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
 set(GO_SOURCE_DIR ${CMAKE_SOURCE_DIR}/libtui)
 set(LIBTUI_PATH ${CMAKE_BINARY_DIR}/libtui.a)
 
-include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/sqlite_modern_cpp/hdr)
 
 file(GLOB SRC_FILES ${SRC_DIR}/*.cpp)
@@ -75,7 +75,7 @@ if(DEFINED BUILD_TESTS AND BUILD_TESTS)
     enable_testing()
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
-    include_directories(${CMAKE_SOURCE_DIR}/VSinclude)
+    include_directories(${CMAKE_SOURCE_DIR}/include)
 
     add_executable(VirtualShelfTests ${TEST_FILES} ${SRC_FILES})
 
