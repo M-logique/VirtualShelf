@@ -4,19 +4,18 @@
 #include <string>
 #include <sqlite_modern_cpp.h>
 
-using namespace std;
 
 struct Book {
-    string title;
-    string author;
+    std::string title;
+    std::string author;
     int year;
     int available_copies;
     int id;
 };
 
 Book registerBook(
-    const string& title,
-    const string& author,
+    const std::string& title,
+    const std::string& author,
     sqlite::database& db,
     int year,
     int available_copies
