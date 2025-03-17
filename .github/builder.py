@@ -72,8 +72,7 @@ BUILD_SLOTS = {
             "CMAKE_OSX_ARCHITECTURES": "x86_64",
             "AR": "ar",
 
-
-            "SQLITE3_ADDITIONAL_FLAGS": "-march=x86_64", 
+            "SQLITE3_ADDITIONAL_FLAGS": "-target x86_64-apple-macos", 
 
             "GOOS": "darwin",
             "GOARCH": "amd64",

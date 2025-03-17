@@ -52,18 +52,6 @@ jobs:
         uses: Bacondish2023/setup-googletest@v1
         with:
           tag: v1.14.0
-
-      - name: Test if mingw works on macOS
-        if: runner.os == 'macOS'
-        run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-          # brew install mingw-w64 --with-multilib
-          export PATH="/opt/homebrew/opt/mingw-w64/bin:$PATH"
-
-          aarch64-w64-mingw32-gcc --version
-          aarch64-w64-mingw32-g++ --version
-          aarch64-w64-mingw32-ar  --version
           
         continue-on-error: true
       
