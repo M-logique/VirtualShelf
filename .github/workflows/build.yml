@@ -63,7 +63,7 @@ jobs:
       
       - name: List clang targets
         if: runner.os == 'macOS'
-        run: clang -list-targets
+        run: clang -print-targets
       
       - name: Install aarch64 building tools
         if: matrix.config.build-slot == 'linux-aarch64'
