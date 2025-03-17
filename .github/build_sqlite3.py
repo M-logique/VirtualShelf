@@ -14,6 +14,7 @@ SQLITE_ARCHIVE = Path("sqlite3.zip")
 
 AR_PATH = environ.get("AR", "ar")
 GCC_PATH = environ.get("GCC", "gcc")
+ADDITIONAL_FLAGS = environ.get("ADDITIONAL_FLAGS", "")
 
 
 def download_sqlite3():
@@ -47,7 +48,13 @@ def build(output_path: Path):
     print("Moving header file to", path.abspath("."))
     shutil.copy(sqlite_h_file, ".")
     print(f"Using {GCC_PATH} for compilation")
-    run_command([GCC_PATH, "-c", "-o", "sqlite3.o", "sqlite3.c"], sqlite_dir)
+
+    build_flags = [GCC_PATH, "-c", "-o", "sqlite3.o", "sqlite3.c"] 
+
+    if ADDITIONAL_FLAGS:
+        build_flags.append(ADDITIONAL_FLAGS)
+
+    run_command(build_flags, sqlite_dir)
     print(f"Using {AR_PATH} for static library")
     run_command([AR_PATH, "rcs", "libsqlite3.a", "sqlite3.o"], sqlite_dir)
     output_lib = sqlite_dir / "libsqlite3.a"

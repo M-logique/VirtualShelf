@@ -8,6 +8,7 @@ set(AR "ar" CACHE STRING "Path of ar")
 set(GOOS "linux" CACHE STRING "GOOS environment variable")
 set(GOARCH "amd64" CACHE STRING "GOARCH environment variable")
 set(CGO_ENABLED "1" CACHE STRING "Enables CGO")
+set(SQLITE3_ADDITIONAL_FLAGS "" CACHE STRING "Additional flags for sqlite3 build")
 
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
@@ -34,6 +35,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E env
         AR=${AR}
         GCC=${CMAKE_C_COMPILER}
+        ADDITIONAL_FLAGS=${SQLITE3_ADDITIONAL_FLAGS}
         python3 build_sqlite3.py -o ${CMAKE_BINARY_DIR}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/.github
     COMMENT "Building SQLite3 library"
