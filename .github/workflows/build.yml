@@ -23,8 +23,8 @@ jobs:
           - { build-os: "ubuntu-latest", build-slot: "linux-x86_64",   inf: "linux-amd64" }
           - { build-os: "ubuntu-latest", build-slot: "linux-aarch64",  inf: "linux-arm64" }
           - { build-os: "ubuntu-latest", build-slot: "win-x86_64",     inf: "win-amd64"   }
-          - { build-os: "ubuntu-latest", build-slot: "win-aarch64",    inf: "win-arm64"   }
-          - { build-os: "ubuntu-latest", build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
+          # - { build-os: "ubuntu-latest", build-slot: "win-aarch64",    inf: "win-arm64"   }
+          - { build-os: "macos-latest",  build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
           - { build-os: "macos-latest",  build-slot: "darwin-aarch64", inf: "darwin-arm64"}    
 
     steps:
@@ -53,21 +53,22 @@ jobs:
         with:
           tag: v1.14.0
 
+      - name: Test if mingw works on macOS
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash -c
 
+          brew install mingw-w64
+          
+          aarch64-w64-mingw32-gcc --version
+          aarch64-w64-mingw32-g++ --version
+          aarch64-w64-mingw32-ar  --version
+        continue-on-error: true
       
       - name: Install MinGW (x86_64)
         if: matrix.config.build-slot == 'win-x86_64'
         run: | 
           sudo apt install mingw-w64-tools -y
           sudo apt install mingw-w64 -y
-
-      - name: Install MinGW (aarch64)
-        if: matrix.config.build-slot == 'win-aarch64'
-        run: |
-          git clone https://github.com/Windows-on-ARM-Experiments/mingw-woarm64-build.git
-          cd mingw-woarm64-build
-          export TOOLCHAIN_PATH=/usr/bin/aarch64-w64-mingw32
-          sudo ./build.sh
       
       
       

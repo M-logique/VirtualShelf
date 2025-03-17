@@ -15,6 +15,7 @@ BUILD_SLOTS = {
             "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
             "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
             "AR": "x86_64-w64-mingw32-ar",
+
             "GOOS": "windows",
             "GOARCH": "amd64"
         },
@@ -25,6 +26,7 @@ BUILD_SLOTS = {
             "CMAKE_C_COMPILER": "aarch64-w64-mingw32-gcc",
             "CMAKE_CXX_COMPILER": "aarch64-w64-mingw32-g++",
             "AR": "aarch64-w64-mingw32-ar",
+
             "GOOS": "windows",
             "GOARCH": "arm64"
         },
@@ -35,6 +37,7 @@ BUILD_SLOTS = {
             "CMAKE_C_COMPILER": "gcc",
             "CMAKE_CXX_COMPILER": "g++",
             "AR": "ar",
+
             "GOOS": "linux",
             "GOARCH": "amd64",
         },
@@ -45,6 +48,7 @@ BUILD_SLOTS = {
             "CMAKE_C_COMPILER": "aarch64-linux-gnu-gcc",
             "CMAKE_CXX_COMPILER": "aarch64-linux-gnu-g++",
             "AR": "aarch64-linux-gnu-ar",
+
             "GOOS": "linux",
             "GOARCH": "arm64"
         },
@@ -55,18 +59,21 @@ BUILD_SLOTS = {
             "CMAKE_C_COMPILER": "gcc",
             "CMAKE_CXX_COMPILER": "clang++",
             "AR": "ar",
+
             "GOOS": "darwin",
-            "GOARCH": "arm64"
+            "GOARCH": "arm64",
         },
         "testings_enabled": True
     },
     "darwin-x86_64": {
         "flags": {
-            "CMAKE_C_COMPILER": "clang",
-            "CMAKE_CXX_COMPILER": "clang++",
+            "CMAKE_C_COMPILER": "gcc",
+            "CMAKE_CXX_COMPILER": "g++",
             "AR": "ar",
+
             "GOOS": "darwin",
-            "GOARCH": "amd64"
+            "GOARCH": "amd64",
+            # "CGO_ENABLED": 1
         },
         "testings_enabled": True
     },

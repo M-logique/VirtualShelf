@@ -7,6 +7,7 @@ option(BUILD_TESTS "Enable building tests" OFF)
 set(AR "ar" CACHE STRING "Path of ar") 
 set(GOOS "linux" CACHE STRING "GOOS environment variable")
 set(GOARCH "amd64" CACHE STRING "GOARCH environment variable")
+set(CGO_ENABLED "1" CACHE STRING "Enables CGO")
 
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
@@ -54,7 +55,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E env
         GOOS=${GOOS}
         GOARCH=${GOARCH}
-        CGO_ENABLED=1 
+        CGO_ENABLED=${CGO_ENABLED}
         CC=${CMAKE_C_COMPILER}
         CXX=${CMAKE_CXX_CIMPILER}
         go build -buildmode=c-archive -o ${LIBTUI_PATH} ${GO_FILES}
