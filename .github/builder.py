@@ -57,7 +57,7 @@ BUILD_SLOTS = {
     "darwin-aarch64": {
         "flags": {
             "CMAKE_C_COMPILER": "gcc",
-            "CMAKE_CXX_COMPILER": "clang++",
+            "CMAKE_CXX_COMPILER": "g++",
             "AR": "ar",
 
             "GOOS": "darwin",
@@ -69,13 +69,13 @@ BUILD_SLOTS = {
         "flags": {
             "CMAKE_C_COMPILER": "gcc",
             "CMAKE_CXX_COMPILER": "g++",
+            "CMAKE_OSX_ARCHITECTURES": "x86_64",
             "AR": "ar",
 
             "GOOS": "darwin",
             "GOARCH": "amd64",
-            # "CGO_ENABLED": 1
         },
-        "testings_enabled": True
+        "testings_enabled": False
     },
 
 }
