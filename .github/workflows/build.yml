@@ -63,7 +63,7 @@ jobs:
 
       - name: Install MinGW (aarch64)
         if: matrix.config.build-slot == 'win-aarch64'
-        run: 
+        run: |
           git clone https://github.com/Windows-on-ARM-Experiments/mingw-woarm64-build.git
           cd mingw-woarm64-build
           export TOOLCHAIN_PATH=/usr/bin/aarch64-w64-mingw32
@@ -73,7 +73,7 @@ jobs:
       
       - name: Install aarch64 building tools
         if: matrix.config.build-slot == 'linux-aarch64'
-        run: sudo apt install g++-aarch64-w64-mingw32 gcc-aarch64-w64-mingw32
+        run: sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Verify Go installation
         run: go version
