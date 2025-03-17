@@ -34,9 +34,12 @@ func PrintLogo() {
 	for i := 0; i < len(splittedText); i++ {
 		fadeFactor := float32(i) / float32(len(splittedText))
 
-		currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
-		// txt += currentColor.Sprint(splittedText[i])
-		currentColor.Println(splittedText[i])
+		if RgbEnabled == 1 {
+			currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
+			currentColor.Println(splittedText[i])
+		} else {
+			pterm.Println(splittedText[i])
+		}
 	}
 	// pterm.Println(txt)
 }

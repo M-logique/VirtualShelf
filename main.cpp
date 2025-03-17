@@ -4,14 +4,25 @@
 #include <sqlite_modern_cpp.h>
 #include <string>
 #include <options.h>
+#include <shared.h>
 
 using namespace std;
 using namespace sqlite;
 
 
-int main() 
+int main(int argc, char* argv[]) 
 {
     database db("dbfile.db");
+
+
+    for (int i = 1; i < argc; ++i) {
+        if (string(argv[i]) == "-DISABLE_RGB") {
+            toggle_rgb();
+            break;  
+        }
+    }
+    GoUpdateRGBState();
+
 
     cout << "Setting up the database" << endl;
     setupDatabase(db);

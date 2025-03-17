@@ -1,5 +1,12 @@
 package main
 
+
+/*
+#cgo CXXFLAGS: -std=c++14
+#cgo CFLAGS: -I./../include
+#cgo LDFLAGS: -L./libtui -lstdc++
+#include "shared.h"
+*/
 import "C"
 
 import (
@@ -42,6 +49,11 @@ func GoPressEnter() {
 		pterm.NewRGB(80, 80, 80),
 	)
 	fmt.Scanln()
+}
+
+//export GoUpdateRGBState
+func GoUpdateRGBState() {
+	tui.RgbEnabled = int(C.is_rgb_enabled())
 }
 
 //export GoBetterPrint

@@ -10,13 +10,17 @@ import (
 func fade(text string, startColor pterm.RGB, endColor pterm.RGB) {
 	txt := ""
 
-	splittedText := strings.Split(text, "")
-
-	for i := 0; i < len(splittedText); i++ {
-		fadeFactor := float32(i) / float32(len(splittedText))
-
-		currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
-		txt += currentColor.Sprint(splittedText[i])
+	if RgbEnabled == 1 {
+		splittedText := strings.Split(text, "")
+	
+		for i := 0; i < len(splittedText); i++ {
+			fadeFactor := float32(i) / float32(len(splittedText))
+	
+			currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
+			txt += currentColor.Sprint(splittedText[i])
+		}
+	} else {
+		txt = text;
 	}
 	pterm.Print(txt)
 }
@@ -27,9 +31,14 @@ func TypeText(text string, sleepDuration time.Duration, startColor pterm.RGB, en
 	for i := 0; i < len(splittedText); i++ {
 		fadeFactor := float32(i) / float32(len(splittedText))
 
-		currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
+		
 		time.Sleep(sleepDuration)
-		currentColor.Print(splittedText[i])
+		if RgbEnabled == 1 {
+			currentColor := startColor.Fade(0, 1, fadeFactor, endColor)
+			currentColor.Print(splittedText[i])
+		} else {
+			pterm.Print(splittedText[i])
+		}
 	}
 
 }

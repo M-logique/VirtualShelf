@@ -59,7 +59,7 @@ add_custom_command(
         GOARCH=${GOARCH}
         CGO_ENABLED=${CGO_ENABLED}
         CC=${CMAKE_C_COMPILER}
-        CXX=${CMAKE_CXX_CIMPILER}
+        CXX=${CMAKE_CXX_COMPILER}
         go build -buildmode=c-archive -o ${LIBTUI_PATH} ${GO_FILES}
     WORKING_DIRECTORY ${GO_SOURCE_DIR}
     COMMENT "Building Go project as a static library"
