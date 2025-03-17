@@ -61,7 +61,9 @@ jobs:
           sudo apt install mingw-w64-tools -y
           sudo apt install mingw-w64 -y
       
-      
+      - name: List clang targets
+        if: runner.os == 'macOS'
+        run: clang -list-targets
       
       - name: Install aarch64 building tools
         if: matrix.config.build-slot == 'linux-aarch64'
