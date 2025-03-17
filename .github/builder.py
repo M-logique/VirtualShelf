@@ -67,12 +67,12 @@ BUILD_SLOTS = {
     },
     "darwin-x86_64": {
         "flags": {
-            "CMAKE_C_COMPILER": "gcc",
-            "CMAKE_CXX_COMPILER": "g++",
+            "CMAKE_C_COMPILER": "clang",
+            "CMAKE_CXX_COMPILER": "clang++",
             "CMAKE_OSX_ARCHITECTURES": "x86_64",
             "AR": "ar",
 
-            "SQLITE3_ADDITIONAL_FLAGS": "-target x86-64 ", 
+            "SQLITE3_ADDITIONAL_FLAGS": "-target=x86-64", 
 
             "GOOS": "darwin",
             "GOARCH": "amd64",
