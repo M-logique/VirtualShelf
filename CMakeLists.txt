@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 option(BUILD_TESTS "Enable building tests" OFF)
 set(AR "ar" CACHE STRING "Path of ar") 
 set(GOOS "linux" CACHE STRING "GOOS environment variable")
+set(GOARCH "amd64" CACHE STRING "GOARCH environment variable")
 
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_SOURCE_DIR}/tests)
@@ -52,6 +53,7 @@ add_custom_command(
     OUTPUT ${LIBTUI_PATH}
     COMMAND ${CMAKE_COMMAND} -E env
         GOOS=${GOOS}
+        GOARCH=${GOARCH}
         CGO_ENABLED=1 
         CC=${CMAKE_C_COMPILER}
         CXX=${CMAKE_CXX_CIMPILER}

@@ -20,9 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { build-os: "ubuntu-latest", build-slot: "github-actions-linux", inf: "linux"}
-          - { build-os: "ubuntu-latest", build-slot: "github-actions-windows", inf: "win"}
-          - { build-os: "macos-latest", build-slot: "github-actions-darwin", inf: "darwin"}    
+          - { build-os: "ubuntu-latest", build-slot: "linux-x86_64",   inf: "linux-amd64" }
+          - { build-os: "ubuntu-latest", build-slot: "linux-aarch64",  inf: "linux-arm64" }
+          - { build-os: "ubuntu-latest", build-slot: "win-x86_64",     inf: "win-amd64"   }
+          - { build-os: "ubuntu-latest", build-slot: "win-aarch64",    inf: "win-arm64"   }
+          - { build-os: "ubuntu-latest", build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
+          - { build-os: "macos-latest",  build-slot: "darwin-aarch64", inf: "darwin-arm64"}    
 
     steps:
       
@@ -52,11 +55,25 @@ jobs:
 
 
       
-      - name: Install MinGW
-        if: matrix.config.build-slot == 'github-actions-windows'
+      - name: Install MinGW (x86_64)
+        if: matrix.config.build-slot == 'win-x86_64'
         run: | 
           sudo apt install mingw-w64-tools -y
           sudo apt install mingw-w64 -y
+
+      - name: Install MinGW (aarch64)
+        if: matrix.config.build-slot == 'win-aarch64'
+        run: 
+          git clone https://github.com/Windows-on-ARM-Experiments/mingw-woarm64-build.git
+          cd mingw-woarm64-build
+          export TOOLCHAIN_PATH=/usr/bin/aarch64-w64-mingw32
+          sudo ./build.sh
+      
+      
+      
+      - name: Install aarch64 building tools
+        if: matrix.config.build-slot == 'linux-aarch64'
+        run: sudo apt install g++-aarch64-w64-mingw32 gcc-aarch64-w64-mingw32
 
       - name: Verify Go installation
         run: go version

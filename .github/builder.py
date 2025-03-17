@@ -9,24 +9,68 @@ from urllib.request import urlretrieve
 
 BUILD_PATH = "build"
 BUILD_SLOTS = {
-    "github-actions-windows": {
-        "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
-        "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
-        "AR": "x86_64-w64-mingw32-ar",
-        "GOOS": "windows",
+    # amd64, 386, arm, ppc64.
+    "win-x86_64": {
+        "flags": {
+            "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
+            "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
+            "AR": "x86_64-w64-mingw32-ar",
+            "GOOS": "windows",
+            "GOARCH": "amd64"
+        },
+        "testings_enabled": False
     },
-    "github-actions-linux": {
-        "CMAKE_C_COMPILER": "gcc",
-        "CMAKE_CXX_COMPILER": "g++",
-        "AR": "ar",
-        "GOOS": "linux",
+    "win-aarch64": {
+        "flags": {
+            "CMAKE_C_COMPILER": "aarch64-w64-mingw32-gcc",
+            "CMAKE_CXX_COMPILER": "aarch64-w64-mingw32-g++",
+            "AR": "aarch64-w64-mingw32-ar",
+            "GOOS": "windows",
+            "GOARCH": "arm64"
+        },
+        "testings_enabled": False
     },
-    "github-actions-darwin": {
-        "CMAKE_C_COMPILER": "gcc",
-        "CMAKE_CXX_COMPILER": "g++",
-        "AR": "ar",
-        "GOOS": "darwin",
+    "linux-x86_64": {
+        "flags": {
+            "CMAKE_C_COMPILER": "gcc",
+            "CMAKE_CXX_COMPILER": "g++",
+            "AR": "ar",
+            "GOOS": "linux",
+            "GOARCH": "amd64",
+        },
+        "testings_enabled": True
     },
+    "linux-aarch64": {
+        "flags": {
+            "CMAKE_C_COMPILER": "aarch64-linux-gnu-gcc",
+            "CMAKE_CXX_COMPILER": "aarch64-linux-gnu-g++",
+            "AR": "aarch64-linux-gnu-ar",
+            "GOOS": "linux",
+            "GOARCH": "arm64"
+        },
+        "testings_enabled": False
+    },
+    "darwin-aarch64": {
+        "flags": {
+            "CMAKE_C_COMPILER": "gcc",
+            "CMAKE_CXX_COMPILER": "clang++",
+            "AR": "ar",
+            "GOOS": "darwin",
+            "GOARCH": "arm64"
+        },
+        "testings_enabled": True
+    },
+    "darwin-x86_64": {
+        "flags": {
+            "CMAKE_C_COMPILER": "clang",
+            "CMAKE_CXX_COMPILER": "clang++",
+            "AR": "ar",
+            "GOOS": "darwin",
+            "GOARCH": "amd64"
+        },
+        "testings_enabled": True
+    },
+
 }
 
 
@@ -52,9 +96,9 @@ def setup_logger(
     return logging.getLogger(name or "BuildScript")
 
 
-def get_build_flags(slot: dict) -> list:
+def get_build_flags(flags: dict) -> list:
 
-    return [f"-D{key}={value}" for key, value in slot.items()]
+    return [f"-D{key}={value}" for key, value in flags.items()]
 
 
 def clean(p):
@@ -73,7 +117,7 @@ def build(build_tests: bool, slot: str, build_path: str):
             "..",
             "-DBUILD_TESTS=ON" if build_tests else "-DBUILD_TESTS=OFF",
             "-DCMAKE_BUILD_TYPE=Release",
-            *get_build_flags(BUILD_SLOTS[slot])
+            *get_build_flags(BUILD_SLOTS[slot]["flags"])
         ],
         cwd=build_path,
         check=True,
@@ -223,23 +267,23 @@ if __name__ == "__main__":
             if os.path.exists(p):
                 logger.info("Removing %s", p)
                 os.remove(p)
+    t = BUILD_SLOTS[args.slot].get("testing_enabled")
 
-    if args.test and "windows" in args.slot:
-        logger.warning("Sorry but testing is not supported for windows! (I hate windows)")
+    if t:
+        logger.warning("Sorry but testing is not supported for %s!", args.slot)
     
-    t = args.test and not "windows" in args.slot
 
     logger.info("Chosen slot: %s", args.slot)
     build(t, args.slot, args.build_path)
     if args.output_dir:
         move_binary(args.output_dir, args.build_path)
 
-    if args.test and not "windows" in args.slot:
+    if t:
         logger.info("Running tests...")
         subprocess.run(["ctest", "--output-on-failure"], check=True, cwd=args.build_path)
         logger.info("All tests were successfull")
 
-    if t:
+    if args.clear:
         clean(args.build_path)
 
     if args.run:
