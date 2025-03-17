@@ -24,7 +24,7 @@ jobs:
           - { build-os: "ubuntu-latest", build-slot: "linux-aarch64",  inf: "linux-arm64" }
           - { build-os: "ubuntu-latest", build-slot: "win-x86_64",     inf: "win-amd64"   }
           - { build-os: "macos-latest",  build-slot: "darwin-aarch64", inf: "darwin-arm64"}    
-          - { build-os: "macos-latest",  build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
+          # - { build-os: "macos-latest",  build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
           # - { build-os: "ubuntu-latest", build-slot: "win-aarch64",    inf: "win-arm64"   }
 
     steps:
