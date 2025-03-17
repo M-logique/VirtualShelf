@@ -23,8 +23,8 @@ jobs:
           - { build-os: "ubuntu-latest", build-slot: "linux-x86_64",   inf: "linux-amd64" }
           - { build-os: "ubuntu-latest", build-slot: "linux-aarch64",  inf: "linux-arm64" }
           - { build-os: "ubuntu-latest", build-slot: "win-x86_64",     inf: "win-amd64"   }
-          - { build-os: "ubuntu-latest", build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
           - { build-os: "macos-latest",  build-slot: "darwin-aarch64", inf: "darwin-arm64"}    
+          # - { build-os: "ubuntu-latest", build-slot: "darwin-x86_64",  inf: "darwin-amd64"}    
           # - { build-os: "ubuntu-latest", build-slot: "win-aarch64",    inf: "win-arm64"   }
 
     steps:
@@ -58,11 +58,13 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-          brew install mingw-w64
-          
+          brew install mingw-w64 --with-multilib
+          export PATH="/opt/homebrew/opt/mingw-w64/bin:$PATH"
+
           aarch64-w64-mingw32-gcc --version
           aarch64-w64-mingw32-g++ --version
           aarch64-w64-mingw32-ar  --version
+          
         continue-on-error: true
       
       - name: Install MinGW (x86_64)
