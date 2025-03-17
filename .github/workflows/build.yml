@@ -58,7 +58,7 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-          brew install mingw-w64 --with-multilib
+          # brew install mingw-w64 --with-multilib
           export PATH="/opt/homebrew/opt/mingw-w64/bin:$PATH"
 
           aarch64-w64-mingw32-gcc --version
