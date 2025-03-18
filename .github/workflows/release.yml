@@ -32,9 +32,7 @@ jobs:
             @semantic-release/gitlab \
             @semantic-release/npm \
             @semantic-release/release-notes-generator \
-            conventional-changelog-conventionalcommits \
-            @mrbernnz/semantic-release-calver@0.2.1 --force
-
+            conventional-changelog-conventionalcommits
 
       - name: Download Binaries
         uses: actions/download-artifact@v4
@@ -48,15 +46,14 @@ jobs:
           find dist -mindepth 1 -type d -exec rm -r {} +
         if: ${{ inputs.dry-run != 'true' }}
 
-
       - name: Run semantic-release
         run: |
           if [ "${{ inputs.dry-run }}" == true ]; then
             echo "Running in dry-run mode"
-            npx semantic-release --dry-run
+            npx semantic-release --config .github/.releaserc.js --dry-run
           else
             echo "Running semantic-release normally"
-            npx semantic-release
+            npx semantic-release --config .github/.releaserc.js
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
