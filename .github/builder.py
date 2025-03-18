@@ -276,7 +276,7 @@ if __name__ == "__main__":
             if os.path.exists(p):
                 logger.info("Removing %s", p)
                 os.remove(p)
-    t = BUILD_SLOTS[args.slot].get("testing_enabled")
+    t = BUILD_SLOTS[args.slot].get("testings_enabled")
 
     if t:
         logger.warning("Sorry but testing is not supported for %s!", args.slot)

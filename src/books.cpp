@@ -1,5 +1,5 @@
 #include <string>
-#include <sqlite_modern_cpp.h>
+#include <database.h>
 
 using namespace std;
 
@@ -15,13 +15,12 @@ struct Book {
 Book registerBook(
     const string& title,
     const string& author,
-    sqlite::database& db,
     int year,
     int available_copies
 )
 {
     int recordID;
-    db << 
+    *db << 
         "INSERT INTO books (year,title,author,available_copies) values (?,?,?,?) RETURNING _id;"
         << year 
         << title 

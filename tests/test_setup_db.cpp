@@ -1,22 +1,23 @@
 #include <gtest/gtest.h>
-#include <sqlite_modern_cpp.h>
-#include "utils.h"
+#include <database.h>
 
 using namespace sqlite;
 
 TEST(DatabaseSetupTest, CreatesTablesWithoutError) {
-    database db(":memory:");
+    registerDatabase(":memory:");
 
-    EXPECT_NO_THROW(setupDatabase(db));
+    EXPECT_NO_THROW(setupTables());
+
+    ASSERT_TRUE(db) << "Database is not initialized!";
 
     int count = 0;
 
-    db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='books';" >> count;
+    *db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='books';" >> count;
     EXPECT_EQ(count, 1);
 
-    db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='borrowings';" >> count;
+    *db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='borrowings';" >> count;
     EXPECT_EQ(count, 1);
 
-    db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='users';" >> count;
+    *db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='students';" >> count;
     EXPECT_EQ(count, 1);
 }

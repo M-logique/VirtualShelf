@@ -18,31 +18,9 @@ void Clear()
     #endif
 }
 
-void setupDatabase(database& db)
-{
-    db << 
-        "CREATE TABLE IF NOT EXISTS books("
-        "   _id integer primary key autoincrement not null,"
-        "   year int,"
-        "   title text,"
-        "   author text,"
-        "   available_copies int"
-        ");";
 
-    db << 
-        "CREATE TABLE IF NOT EXISTS borrowings("
-        "   _id integer primary key autoincrement not null,"
-        "   borrower_id integer,"
-        "   book_id integer"
-        ");";
 
-    db << 
-        "CREATE TABLE IF NOT EXISTS students("
-        "   _id integer primary key autoincrement not null,"
-        "   name text,"
-        "   student_id integer"
-        ");";
-} 
+
 
 string getString(const string& text) 
 {
@@ -90,22 +68,22 @@ void betterPrint(const string& text) {
     GoBetterPrint(const_cast<char*>(text.c_str()));
 }
 
-Printer& Printer::operator<<(const std::string& data) {
+Gout& Gout::operator<<(const string& data) {
     betterPrint(data);
     return *this;
 }
 
-Printer& Printer::operator<<(int data) {
-    std::stringstream ss;
+Gout& Gout::operator<<(int data) {
+    stringstream ss;
     ss << data;
     betterPrint(ss.str());
     return *this;
 }
 
 
-Printer& Printer::operator<<(std::ostream& (*func)(std::ostream&)) {
-    func(std::cout); 
+Gout& Gout::operator<<(ostream& (*func)(ostream&)) {
+    func(cout); 
     return *this;
 }
 
-Printer goout;
+Gout gout;

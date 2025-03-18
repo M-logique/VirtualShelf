@@ -2,7 +2,6 @@
 #define STUDENTS_H
 
 #include <string>
-#include <sqlite_modern_cpp.h>
 
 struct Student {
     std::string name;
@@ -10,7 +9,7 @@ struct Student {
     int id;
 };
 
-Student registerStudent(const std::string& name, int student_id, sqlite::database& db);
+Student registerStudent(const std::string& name, int student_id);
 
 
 #endif //STDENTS_H

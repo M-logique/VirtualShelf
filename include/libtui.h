@@ -10,6 +10,7 @@ extern "C"
     extern void GoPressEnter();
     extern void GoBetterPrint(char* text);
     extern void GoUpdateRGBState();
+    extern int  GoDisplayBookSelector();
 }
 
 #endif // LIBTUI_H

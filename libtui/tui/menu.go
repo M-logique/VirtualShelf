@@ -13,11 +13,6 @@ func MenuChoice() int {
 		"Exit",
 	}
 
-	// selectedOption, _ := pterm.DefaultInteractiveSelect.
-	// WithOptions(options).
-	// WithFilter(false).
-	// WithMaxHeight(10).
-	// Show("Please select an option")
 	selector := pterm.DefaultInteractiveSelect.
 	WithOptions(options).
 	WithFilter(false).

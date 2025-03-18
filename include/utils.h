@@ -5,22 +5,20 @@
 #include <string>
 
 void Clear();
-void setupDatabase(sqlite::database& db);
 std::string getString(const std::string& text);
 int getNum(const std::string& text);
 void typeText(const std::string& text);
 
-class Printer {
+class Gout {
 public:
-    Printer& operator<<(const std::string& data);
-    Printer& operator<<(int data);
-    Printer& operator<<(std::ostream& (*func)(std::ostream&));
+    Gout& operator<<(const std::string& data);
+    Gout& operator<<(int data);
+    Gout& operator<<(std::ostream& (*func)(std::ostream&));
 };
 
-extern Printer prnt;
 
 void betterPrint(const std::string& text);
 
-extern Printer goout;
+extern Gout gout;
 
 #endif // UTILS_H

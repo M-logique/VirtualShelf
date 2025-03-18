@@ -6,11 +6,12 @@
 #include <sstream>
 #include <libtui.h>
 #include <students.h>
+#include <database.h>
 
 using namespace std;
 using namespace sqlite;
 
-void addBook(database& db) 
+void addBook() 
 {
     string title = getString("Enter the title of the book: ");
     string author = getString("Enter the author's name: ");
@@ -20,7 +21,6 @@ void addBook(database& db)
     Book book = registerBook(
         title,
         author,
-        db,
         year,
         avCps
     );
@@ -31,7 +31,7 @@ void addBook(database& db)
 
     cout << endl;
     typeText("Book Created!");
-    goout 
+    gout 
         << endl 
         << "{{.Cyan}}Title: {{.Magenta}}" << book.title << endl
         << "{{.Cyan}}Author: {{.Magenta}}" << book.author << endl
@@ -43,31 +43,31 @@ void addBook(database& db)
     GoPressEnter();
 }
 
-void showAllBooks(database& db) 
+void showAllBooks() 
 {
 
     int count = 0;
-    db << "SELECT COUNT(*) FROM books;" >> count;
+    *db << "SELECT COUNT(*) FROM books;" >> count;
 
     if (count == 0) 
     {
-        goout << "{{.Red}}There is no book in the shelf"
+        gout << "{{.Red}}There is no book in the shelf"
         << endl;
         GoPressEnter();
         return;
     }
 
-    goout << "{{.Blue}}[!]{{.Cyan}} Found " << count << " Books" 
+    gout << "{{.Blue}}[!]{{.Cyan}} Found " << count << " Books" 
     << "{{.Reset}}"
     << endl; 
 
-    for (auto &&row : db << "SELECT title,year,author,available_copies FROM books;") {
+    for (auto &&row : *db << "SELECT title,year,author,available_copies FROM books;") {
         string title, author;
         int year, avCps;
 
         row >> title >> year >> author >> avCps;
 
-        goout 
+        gout 
             << endl 
             << "{{.Cyan}}Title: {{.Magenta}}" << title << endl
             << "{{.Cyan}}Author: {{.Magenta}}" << author << endl
@@ -81,15 +81,26 @@ void showAllBooks(database& db)
 
 }
 
-void addStudent(database& db) 
+void addStudent() 
 {
+    int student_id;
     string name = getString("Enter the name of the student: ");
-    int student_id = getNum("Enter the id of the student: ");
+    while (true) {
+        student_id = getNum("Enter the id of the student: ");
+        int count = 0;
+
+        *db << "SELECT count(*) FROM students WHERE student_id = ?;" << student_id >> count;
+        if (count == 0) {
+            break;
+        }
+
+        gout << "{{.Red}}[!]{{.Yellow}} Student ID already exists. Please enter a new one.{{.Reset}}" << endl;
+
+    }
 
     Student student = registerStudent(
         name,
-        student_id,
-        db
+        student_id
     );
 
     Clear();
@@ -98,7 +109,7 @@ void addStudent(database& db)
 
     cout << endl;
     typeText("Student Registration was successfull!");
-    goout 
+    gout 
         << endl 
         << "{{.Cyan}}Name: {{.Magenta}}" << student.name << endl
         << "{{.Cyan}}ID: {{.Magenta}}" << student.student_id << endl
@@ -107,4 +118,16 @@ void addStudent(database& db)
 
     GoPressEnter();
 
+}
+
+void borrowABook() 
+{
+    int book_id = GoDisplayBookSelector();
+
+    if (book_id == -1) {
+        return;
+    }
+
+    gout << "{{.Green}}Book ID: {{.Magenta}}" << book_id << "{{.Reset}}" << endl;
+    GoPressEnter();
 }

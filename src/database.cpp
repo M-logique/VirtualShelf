@@ -20,17 +20,17 @@ void setupTables()
     *db << 
         "CREATE TABLE IF NOT EXISTS books("
         "   _id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-        "   year INT,"
-        "   title TEXT,"
-        "   author TEXT,"
-        "   available_copies INT"
+        "   year INT NOT NULL,"
+        "   title TEXT NOT NULL,"
+        "   author TEXT NOT NULL,"
+        "   available_copies INT NOT NULL"
         ");";
 
     *db << 
         "CREATE TABLE IF NOT EXISTS students("
         "   _id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-        "   name TEXT,"
-        "   student_id INTEGER"
+        "   name TEXT NOT NULL,"
+        "   student_id INTEGER UNIQUE NOT NULL"
         ");";
 
     *db << 

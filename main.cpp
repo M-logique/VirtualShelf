@@ -5,14 +5,13 @@
 #include <string>
 #include <options.h>
 #include <shared.h>
+#include <database.h>
 
 using namespace std;
-using namespace sqlite;
 
 
 int main(int argc, char* argv[]) 
 {
-    database db("dbfile.db");
 
 
     for (int i = 1; i < argc; ++i) {
@@ -25,7 +24,13 @@ int main(int argc, char* argv[])
 
 
     cout << "Setting up the database" << endl;
-    setupDatabase(db);
+    registerDatabase("dbfile.db");
+    setupTables();
+
+    // TODO: Remove this shit when you completed the code
+    // PrintBookValues();
+
+    // cin.get();
 
     /*
         "0. Add a new book",
@@ -46,13 +51,16 @@ int main(int argc, char* argv[])
         switch (choice)
         {
         case 0:
-            addBook(db);
+            addBook(*db);
             break;
         case 1:
-            showAllBooks(db);
+            showAllBooks(*db);
             break;
         case 2:
-            addStudent(db);
+            addStudent(*db);
+            break;
+        case 3:
+            borrowABook(*db);
             break;
         case 6:
             exit(0);

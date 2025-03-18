@@ -1,4 +1,4 @@
-#include <sqlite_modern_cpp.h>
+#include <database.h>
 
 struct Student {
     std::string name;
@@ -6,10 +6,10 @@ struct Student {
     int id;
 };
 
-Student registerStudent(const std::string& name, int student_id, sqlite::database& db) 
+Student registerStudent(const std::string& name, int student_id) 
 {
     int recordID;
-    db << "INSERT INTO students(name,student_id) VALUES (?,?) RETURNING _id;"
+    *db << "INSERT INTO students(name,student_id) VALUES (?,?) RETURNING _id;"
         << name 
         << student_id 
         >> recordID;
