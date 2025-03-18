@@ -1,12 +1,11 @@
 #include <gtest/gtest.h>
 #include <database.h>
 
-using namespace sqlite;
+TEST(DatabaseSetupTest, CreatesTablesWithoutError) 
+{
+    register_database(":memory:");
 
-TEST(DatabaseSetupTest, CreatesTablesWithoutError) {
-    registerDatabase(":memory:");
-
-    EXPECT_NO_THROW(setupTables());
+    EXPECT_NO_THROW(setup_tables());
 
     ASSERT_TRUE(db) << "Database is not initialized!";
 
@@ -21,3 +20,4 @@ TEST(DatabaseSetupTest, CreatesTablesWithoutError) {
     *db << "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='students';" >> count;
     EXPECT_EQ(count, 1);
 }
+
