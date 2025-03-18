@@ -27,4 +27,4 @@ jobs:
     secrets: inherit
     permissions: write-all
     with: 
-      name: VirtualShelf
+      name: virtualshelf

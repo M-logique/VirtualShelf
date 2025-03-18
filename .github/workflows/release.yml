@@ -34,16 +34,46 @@ jobs:
             @semantic-release/release-notes-generator \
             conventional-changelog-conventionalcommits
 
-      - name: Download Binaries
+      - name: Download Binaries for all platforms
         uses: actions/download-artifact@v4
         with:
           path: dist/
         if: ${{ inputs.dry-run != 'true' }}
-        
+
       - name: Move Binary files to root of dist
         run: |
           find dist -mindepth 2 -type f -exec mv -t dist {} +
           find dist -mindepth 1 -type d -exec rm -r {} +
+        if: ${{ inputs.dry-run != 'true' }}
+
+      - name: Create tar.gz Archives for all platforms
+        run: |
+          # Linux amd64
+          tar -czf dist/virtualshelf-linux-amd64.tar.gz -C dist virtualshelf-linux-amd64
+          
+          # Linux arm64
+          tar -czf dist/virtualshelf-linux-arm64.tar.gz -C dist virtualshelf-linux-arm64
+          
+          # macOS arm64
+          tar -czf dist/virtualshelf-darwin-arm64.tar.gz -C dist virtualshelf-darwin-arm64
+          
+          # Windows amd64
+          tar -czf dist/virtualshelf-win-amd64.tar.gz -C dist virtualshelf-win-amd64.exe
+        if: ${{ inputs.dry-run != 'true' }}
+
+      - name: Create zip Archives for all platforms
+        run: |
+          # Linux amd64
+          zip -r dist/virtualshelf-linux-amd64.zip dist/virtualshelf-linux-amd64
+          
+          # Linux arm64
+          zip -r dist/virtualshelf-linux-arm64.zip dist/virtualshelf-linux-arm64
+          
+          # macOS arm64
+          zip -r dist/virtualshelf-darwin-arm64.zip dist/virtualshelf-darwin-arm64
+          
+          # Windows amd64
+          zip -r dist/virtualshelf-win-amd64.zip dist/virtualshelf-win-amd64.exe
         if: ${{ inputs.dry-run != 'true' }}
 
       - name: Run semantic-release
