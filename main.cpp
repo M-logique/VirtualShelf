@@ -28,12 +28,13 @@ int main(int argc, char* argv[])
     setup_tables();
     /*
         "0. Add a new book",
-		"1. Show all books",
-		"2. Add a new student",
-		"3. Borrowing a book",
-		"4. Search by book title or author",
-		"5. Display a list of borrowed books and the members who have them",
-		"6. Exit",
+        "1. Show all books",
+        "2. Add a new student",
+        "3. Borrow a book",
+        "4. Search for a book by title or author",
+        "5. Display a list of borrowed books and their borrowers",
+        "6. Return a borrowed book",
+        "7. Exit",
     */
 
     while (true) {
@@ -58,6 +59,12 @@ int main(int argc, char* argv[])
             break;
         case 4:
             search_books();
+            break;
+        case 5:
+            show_borrowings();
+            break;
+        case 6:
+            return_borrowed_book();
             break;
         default:
             exit(0);

@@ -12,6 +12,7 @@ extern "C"
     extern void GoUpdateRGBState();
     extern int  GoDisplayBookSelector(int checkAv);
     extern int  GoDisplayStudentSelector();
+    extern int  GoDisplayBorrowingSelector();
 }
 
 #endif // LIBTUI_H

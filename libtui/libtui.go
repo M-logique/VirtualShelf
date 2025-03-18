@@ -142,5 +142,46 @@ func GoDisplayStudentSelector() int {
 	return studentID
 }
 
+//export GoDisplayBorrowingSelector
+func GoDisplayBorrowingSelector() int {
+
+	var size C.int
+	valuesPtr := C.get_borrowing_values(&size)
+
+	if valuesPtr == nil || size == 0 {
+		tui.BetterPrint("{{.Red}}[!]{{.Yellow}} There are no active borrowings!\n{{.Reset}}")
+		GoPressEnter()
+		return -1
+	}
+
+	values := unsafe.Slice((**C.char)(unsafe.Pointer(valuesPtr)), size)
+
+	var options []string
+	for _, value := range values {
+		options = append(options, C.GoString(value))
+	}
+
+	C.free_values(valuesPtr, size)
+
+	selector := pterm.DefaultInteractiveSelect.
+		WithOptions(options).
+		WithFilter(true).
+		WithMaxHeight(10)
+
+	selector.SelectorStyle = pterm.NewStyle(pterm.FgDarkGray)
+
+	selectedOption, _ := selector.Show("Please select a borrowing")
+
+	var borrowingID int
+	_, err := fmt.Sscanf(selectedOption, "ID: %d", &borrowingID)
+	if err != nil {
+		fmt.Println("Error extracting borrowing ID:", err)
+		return -1
+	}
+
+	return borrowingID
+}
+
+
 
 func main() {}

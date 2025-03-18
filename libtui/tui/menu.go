@@ -10,6 +10,7 @@ func MenuChoice() int {
 		"Borrowing a book",
 		"Search by book title or author",
 		"Display a list of borrowed books and the members who have them",
+		"Return a borrowed book",
 		"Exit",
 	}
 
