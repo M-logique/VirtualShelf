@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
 
 
     cout << "Setting up the database" << endl;
-    registerDatabase("dbfile.db");
-    setupTables();
+    register_database("dbfile.db");
+    setup_tables();
     /*
         "0. Add a new book",
 		"1. Show all books",
@@ -45,22 +45,22 @@ int main(int argc, char* argv[])
         switch (choice)
         {
         case 0:
-            addBook();
+            add_book();
             break;
         case 1:
-            showAllBooks();
+            show_all_books();
             break;
         case 2:
-            addStudent();
+            add_student();
             break;
         case 3:
-            borrowABook();
+            borrow_a_book();
             break;
-        case 6:
-            exit(0);
+        case 4:
+            search_books();
             break;
-        
         default:
+            exit(0);
             break;
         }
 

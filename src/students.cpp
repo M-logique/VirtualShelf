@@ -6,14 +6,14 @@ struct Student {
     int id;
 };
 
-Student registerStudent(const std::string& name, int student_id) 
+Student register_student(const std::string& name, int student_id) 
 {
-    int recordID;
+    int record_id;
     *db << "INSERT INTO students(name,student_id) VALUES (?,?) RETURNING _id;"
         << name 
         << student_id 
-        >> recordID;
+        >> record_id;
 
-    return Student{name, student_id, recordID};
+    return Student{name, student_id, record_id};
 }
 

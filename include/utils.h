@@ -1,13 +1,12 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <sqlite_modern_cpp.h>
 #include <string>
 
 void Clear();
-std::string getString(const std::string& text);
-int getNum(const std::string& text);
-void typeText(const std::string& text);
+std::string get_string(const std::string& text);
+int get_num(const std::string& text);
+void type_text(const std::string& text);
 
 class Gout {
 public:
@@ -17,7 +16,7 @@ public:
 };
 
 
-void betterPrint(const std::string& text);
+void better_print(const std::string& text);
 
 extern Gout gout;
 

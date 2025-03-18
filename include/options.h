@@ -3,9 +3,10 @@
 
 #include <sqlite_modern_cpp.h>
 
-void addBook();
-void showAllBooks();
-void addStudent();
-void borrowABook();
+void add_book();
+void show_all_books();
+void add_student();
+void borrow_a_book();
+void search_books();
 
 #endif // OPTIONS_H

@@ -19,11 +19,20 @@ void toggle_rgb() {
     rgb_enabled = !rgb_enabled; 
 }
 
-const char** get_book_values(int* size) {
+const char** get_book_values(int* size, int check_av) 
+{
     if (!db) return nullptr; 
 
+    string query = "SELECT _id, year, author, title FROM books";
+
+    if (check_av) {
+        query+=" WHERE available_copies > 0";
+    }
+
+    query += ";";
+
     vector<string> values;
-    for (auto &&row : *db << "SELECT _id, year, author, title FROM books WHERE available_copies > 0;") {
+    for (auto &&row : *db << query) {
         stringstream ss;
         int _id, year;
         string author, title;
@@ -45,7 +54,8 @@ const char** get_book_values(int* size) {
     return values_arr; 
 }
 
-const char** get_student_values(int* size) {
+const char** get_student_values(int* size) 
+{
     if (!db) return nullptr; 
 
     vector<string> values;

@@ -6,12 +6,12 @@ using namespace sqlite;
 
 std::unique_ptr<sqlite::database> db = nullptr; 
 
-void registerDatabase(const std::string& name) {
+void register_database(const std::string& name) {
     db = std::make_unique<sqlite::database>(name);
 }
 
 
-void setupTables()
+void setup_tables()
 {
 
 

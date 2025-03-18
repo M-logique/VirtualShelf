@@ -22,17 +22,17 @@ void Clear()
 
 
 
-string getString(const string& text) 
+string get_string(const string& text) 
 {
     while (true) {
         string input;
 
-        typeText(text);
+        type_text(text);
 
         getline(cin, input);
 
         if (input.empty()) {
-            typeText("Invalid input. Please enter a non-empty string.\n");
+            type_text("Invalid input. Please enter a non-empty string.\n");
             continue;
         }
 
@@ -40,18 +40,18 @@ string getString(const string& text)
     }
 }
 
-int getNum(const string& text) 
+int get_num(const string& text) 
 {
     while (true) {
         string input;
         int inputMsg;
 
-        typeText(text);
+        type_text(text);
         getline(cin, input);
 
         stringstream ss(input);
         if (!(ss >> inputMsg)) {
-            typeText("Invalid input. Please enter a number.\n");
+            type_text("Invalid input. Please enter a number.\n");
             continue;
         }
 
@@ -59,24 +59,24 @@ int getNum(const string& text)
     }
 }
 
-void typeText(const string& text) 
+void type_text(const string& text) 
 {
     GoTypeText(const_cast<char*>(text.c_str()));
 }
 
-void betterPrint(const string& text) {
+void better_print(const string& text) {
     GoBetterPrint(const_cast<char*>(text.c_str()));
 }
 
 Gout& Gout::operator<<(const string& data) {
-    betterPrint(data);
+    better_print(data);
     return *this;
 }
 
 Gout& Gout::operator<<(int data) {
     stringstream ss;
     ss << data;
-    betterPrint(ss.str());
+    better_print(ss.str());
     return *this;
 }
 

@@ -12,22 +12,22 @@ struct Book {
     int id;
 };
 
-Book registerBook(
+Book register_book(
     const string& title,
     const string& author,
     int year,
     int available_copies
 )
 {
-    int recordID;
+    int record_id;
     *db << 
         "INSERT INTO books (year,title,author,available_copies) values (?,?,?,?) RETURNING _id;"
         << year 
         << title 
         << author 
         << available_copies
-        >> recordID;
+        >> record_id;
 
 
-    return Book{title, author, year, available_copies, recordID};
+    return Book{title, author, year, available_copies, record_id};
 }

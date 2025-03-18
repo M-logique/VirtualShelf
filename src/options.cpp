@@ -11,18 +11,18 @@
 using namespace std;
 using namespace sqlite;
 
-void addBook() 
+void add_book() 
 {
-    string title = getString("Enter the title of the book: ");
-    string author = getString("Enter the author's name: ");
-    int year = getNum("Enter the publication year of the book: ");
-    int avCps = getNum("How many available copies does it have? : ");
+    string title = get_string("Enter the title of the book: ");
+    string author = get_string("Enter the author's name: ");
+    int year = get_num("Enter the publication year of the book: ");
+    int av_cps = get_num("How many available copies does it have? : ");
 
-    Book book = registerBook(
+    Book book = register_book(
         title,
         author,
         year,
-        avCps
+        av_cps
     );
 
     
@@ -30,7 +30,7 @@ void addBook()
     GoPrintLogo();
 
     cout << endl;
-    typeText("Book Created!");
+    type_text("Book Created!");
     gout 
         << endl 
         << "{{.Cyan}}Title: {{.Magenta}}" << book.title << endl
@@ -43,7 +43,7 @@ void addBook()
     GoPressEnter();
 }
 
-void showAllBooks() 
+void show_all_books() 
 {
 
     int count = 0;
@@ -81,12 +81,12 @@ void showAllBooks()
 
 }
 
-void addStudent() 
+void add_student() 
 {
     int student_id;
-    string name = getString("Enter the name of the student: ");
+    string name = get_string("Enter the name of the student: ");
     while (true) {
-        student_id = getNum("Enter the id of the student: ");
+        student_id = get_num("Enter the id of the student: ");
         int count = 0;
 
         *db << "SELECT count(*) FROM students WHERE student_id = ?;" << student_id >> count;
@@ -98,7 +98,7 @@ void addStudent()
 
     }
 
-    Student student = registerStudent(
+    Student student = register_student(
         name,
         student_id
     );
@@ -108,7 +108,7 @@ void addStudent()
 
 
     cout << endl;
-    typeText("Student Registration was successfull!");
+    type_text("Student Registration was successfull!");
     gout 
         << endl 
         << "{{.Cyan}}Name: {{.Magenta}}" << student.name << endl
@@ -120,9 +120,9 @@ void addStudent()
 
 }
 
-void borrowABook() 
+void borrow_a_book() 
 {
-    int book_id = GoDisplayBookSelector();
+    int book_id = GoDisplayBookSelector(1);
     if (book_id == -1) {
         return;
     }
@@ -137,5 +137,53 @@ void borrowABook()
         << book_id;
 
     gout << "{{.Green}}[✓]{{.Yellow}} Book borrowed successfully.{{.Reset}}" << endl;
+    GoPressEnter();
+}
+
+
+void search_books() 
+{
+    int count;
+    *db << "SELECT COUNT(*) FROM books;" 
+        >> count;
+
+    if (count == 0) {
+        gout << "{{.Red}}[!]{{.Yellow}} There is no book in the shelf!{{.Reset}}" << endl;
+        return;
+    }     
+
+    int book_id = GoDisplayBookSelector(0);
+    
+    string title, author;
+    int year, av_cps, _id, borrow_count;
+
+    bool book_found = false;
+    *db << "SELECT _id, title, year, author, available_copies FROM books WHERE _id = ?;"
+        << book_id
+        >> [&](int id, string t, int y, string a, int av) {
+            _id = id;
+            title = t;
+            year = y;
+            author = a;
+            av_cps = av;
+        };
+
+
+
+    *db << "SELECT COUNT(*) FROM borrowings WHERE book_id = ?;" 
+        << _id
+        >> borrow_count;
+
+
+    gout 
+        << "{{.Green}}Title: {{.Magenta}}" << title << endl
+        << "{{.Green}}Author: {{.Magenta}}" << author << endl
+        << "{{.Green}}Year: {{.Magenta}}" << year << endl 
+        << "{{.Green}}Current Copies: {{.Magenta}}" << av_cps << endl
+        << "{{.Blue}} Borrowed: {{.LightMagenta}}" << borrow_count << endl
+        << "{{.Blue}} Total: {{.LightMagenta}}" << borrow_count + av_cps << endl;
+
+        
+    
     GoPressEnter();
 }

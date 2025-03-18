@@ -12,7 +12,7 @@ struct Book {
     int id;
 };
 
-Book registerBook(
+Book register_book(
     const std::string& title,
     const std::string& author,
     int year,

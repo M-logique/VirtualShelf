@@ -63,10 +63,10 @@ func GoBetterPrint(text *C.char) {
 }
 
 //export GoDisplayBookSelector
-func GoDisplayBookSelector() int {
+func GoDisplayBookSelector(checkAv int) int {
 
 	var size C.int
-	valuesPtr := C.get_book_values(&size)
+	valuesPtr := C.get_book_values(&size, C.int(checkAv))
 
 	if valuesPtr == nil || size == 0 {
 		tui.BetterPrint("{{.Red}}[!]{{.Yellow}} There is no book in the shelf!\n{{.Reset}}")

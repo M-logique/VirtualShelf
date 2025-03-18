@@ -5,7 +5,7 @@
 
 extern std::unique_ptr<sqlite::database> db;
 
-void registerDatabase(const std::string& name);
-void setupTables();
+void register_database(const std::string& name);
+void setup_tables();
 
 #endif // DATABASE_H

@@ -10,7 +10,7 @@ extern "C"
     extern void GoPressEnter();
     extern void GoBetterPrint(char* text);
     extern void GoUpdateRGBState();
-    extern int  GoDisplayBookSelector();
+    extern int  GoDisplayBookSelector(int checkAv);
     extern int  GoDisplayStudentSelector();
 }
 

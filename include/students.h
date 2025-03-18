@@ -9,7 +9,7 @@ struct Student {
     int id;
 };
 
-Student registerStudent(const std::string& name, int student_id);
+Student register_student(const std::string& name, int student_id);
 
 
 #endif //STDENTS_H
