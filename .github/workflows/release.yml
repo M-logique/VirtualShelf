@@ -78,12 +78,14 @@ jobs:
 
       - name: Run semantic-release
         run: |
+          npm init -y
+          cp .github/.releaserc.js .
           if [ "${{ inputs.dry-run }}" == true ]; then
             echo "Running in dry-run mode"
-            npx semantic-release --config .github/.releaserc.js --dry-run
+            npx semantic-release --dry-run
           else
             echo "Running semantic-release normally"
-            npx semantic-release --config .github/.releaserc.js
+            npx semantic-release
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
