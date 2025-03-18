@@ -26,12 +26,6 @@ int main(int argc, char* argv[])
     cout << "Setting up the database" << endl;
     registerDatabase("dbfile.db");
     setupTables();
-
-    // TODO: Remove this shit when you completed the code
-    // PrintBookValues();
-
-    // cin.get();
-
     /*
         "0. Add a new book",
 		"1. Show all books",
@@ -51,16 +45,16 @@ int main(int argc, char* argv[])
         switch (choice)
         {
         case 0:
-            addBook(*db);
+            addBook();
             break;
         case 1:
-            showAllBooks(*db);
+            showAllBooks();
             break;
         case 2:
-            addStudent(*db);
+            addStudent();
             break;
         case 3:
-            borrowABook(*db);
+            borrowABook();
             break;
         case 6:
             exit(0);
@@ -70,6 +64,7 @@ int main(int argc, char* argv[])
             break;
         }
 
+        
     }
     return 0;
 }

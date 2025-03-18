@@ -123,11 +123,19 @@ void addStudent()
 void borrowABook() 
 {
     int book_id = GoDisplayBookSelector();
-
     if (book_id == -1) {
         return;
     }
 
-    gout << "{{.Green}}Book ID: {{.Magenta}}" << book_id << "{{.Reset}}" << endl;
+    int student_id = GoDisplayStudentSelector();
+    if (student_id == -1) {
+        return;
+    }
+    
+    *db << "INSERT INTO borrowings (borrower_id, book_id) VALUES (?, ?);" 
+        << student_id 
+        << book_id;
+
+    gout << "{{.Green}}[✓]{{.Yellow}} Book borrowed successfully.{{.Reset}}" << endl;
     GoPressEnter();
 }

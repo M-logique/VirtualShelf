@@ -11,6 +11,7 @@ extern "C"
     extern void GoBetterPrint(char* text);
     extern void GoUpdateRGBState();
     extern int  GoDisplayBookSelector();
+    extern int  GoDisplayStudentSelector();
 }
 
 #endif // LIBTUI_H

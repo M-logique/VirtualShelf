@@ -45,16 +45,16 @@ const char** get_book_values(int* size) {
     return values_arr; 
 }
 
-const char** get_book_values(int* size) {
+const char** get_student_values(int* size) {
     if (!db) return nullptr; 
 
     vector<string> values;
-    for (auto &&row : *db << "SELECT _id, year, author, title FROM books WHERE available_copies > 0;") {
+    for (auto &&row : *db << "SELECT _id, name, student_id FROM students") {
         stringstream ss;
-        int _id, year;
-        string author, title;
-        row >> _id >> year >> author >> title;
-        ss << "ID: " << _id << " | Title: " << title << " | Author: " << author;
+        int _id, student_id;
+        string name;
+        row >> _id >> name >> student_id;
+        ss << "ID: " << _id << " | Name: " << name << " | Student ID: " << student_id;
         values.push_back(ss.str());
     }
 

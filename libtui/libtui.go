@@ -69,7 +69,7 @@ func GoDisplayBookSelector() int {
 	valuesPtr := C.get_book_values(&size)
 
 	if valuesPtr == nil || size == 0 {
-		tui.BetterPrint("{{.Red}}[!]{{.Yellow}} You don't have any books yet!\n{{.Reset}}")
+		tui.BetterPrint("{{.Red}}[!]{{.Yellow}} There is no book in the shelf!\n{{.Reset}}")
 		GoPressEnter()
 		return -1
 	}
@@ -102,6 +102,45 @@ func GoDisplayBookSelector() int {
 	return bookID
 }
 
+//export GoDisplayStudentSelector
+func GoDisplayStudentSelector() int {
+
+	var size C.int
+	valuesPtr := C.get_student_values(&size)
+
+	if valuesPtr == nil || size == 0 {
+		tui.BetterPrint("{{.Red}}[!]{{.Yellow}} You don't have any students yet!\n{{.Reset}}")
+		GoPressEnter()
+		return -1
+	}
+
+	values := unsafe.Slice((**C.char)(unsafe.Pointer(valuesPtr)), size)
+
+	var options []string
+	for _, value := range values {
+		options = append(options, C.GoString(value))
+	}
+
+	C.free_values(valuesPtr, size)
+
+	selector := pterm.DefaultInteractiveSelect.
+		WithOptions(options).
+		WithFilter(true).
+		WithMaxHeight(10)
+
+	selector.SelectorStyle = pterm.NewStyle(pterm.FgDarkGray)
+
+	selectedOption, _ := selector.Show("Please select a student")
+
+	var studentID int
+	_, err := fmt.Sscanf(selectedOption, "ID: %d", &studentID)
+	if err != nil {
+		fmt.Println("Error extracting book ID:", err)
+		return -1
+	}
+
+	return studentID
+}
 
 
 func main() {}

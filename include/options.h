@@ -3,9 +3,9 @@
 
 #include <sqlite_modern_cpp.h>
 
-void addBook(sqlite::database& db);
-void showAllBooks(sqlite::database& db);
-void addStudent(sqlite::database& db);
-void borrowABook(sqlite::database& db);
+void addBook();
+void showAllBooks();
+void addStudent();
+void borrowABook();
 
 #endif // OPTIONS_H
